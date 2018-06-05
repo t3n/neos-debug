@@ -34,8 +34,14 @@ If you're running a fusion standalone app check that code and include it the js 
 To enable the cache visualization open your browsers developer console and execute
 `__enable_content_cache_debug__()`. This will add three new buttons.
 
-flaslight: toggle visualization
-clipboard: displays a list of used cached entries in a hierarchical order
-X: disble debug mode
+🔦: toggle visualization
+📋: displays a list of used cached entries in a hierarchical order
+❌: disble debug mode
+
+If you'd like to persist the active debug state you can add a `true` to the method
+```
+__enable_content_cache_debug__(true)
+```
+This will set a cookie and the debug mode will still be active after a page refresh.
 
 ![Demo](demo.gif)
