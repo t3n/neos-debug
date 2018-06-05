@@ -17,10 +17,18 @@ Yeebase:
   Fusion:
     ContentCacheDebug:
       enabled: true
+
 ```
 
-Once the package is activated it will render some meta data into the html output if the current user inherits the role `Yeebase.Fusion.ContentCacheDebug:Debugger`. So make sure that
-this role is applied as well.
+Now the package is active and will render some metadata in your html output if the current user
+inherits the role `Yeebase.Fusion.ContentCacheDebug:Debugger`. Only user with this role will be able to see the debug information.
+
+To get the debugger running you now need to include some javascript and css to acutally be able to render the output. For Neos we already adjusted the `Neos.Neos.Page` prototype. Include this in your Root.fusion of your site package:
+```
+include: resource://Yeebase.Fusion.ContentCacheDebug/Private/Fusion/Root.fusion
+```
+
+If you're running a fusion standalone app check that code and include it the js and css files to your page.
 
 ## Usage
 To enable the cache visualization open your browsers developer console and execute
