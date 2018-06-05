@@ -1,0 +1,29 @@
+prototype(Neos.Neos:Page) {
+    head.contentCacheDebugStyle = Neos.Fusion:Tag {
+        tagName = 'link'
+        attributes {
+            rel = 'stylesheet'
+            href = Neos.Fusion:ResourceUri {
+                path = 'resource://Yeebase.Fusion.ContentCacheDebug/Public/Style/main.css'
+            }
+        }
+
+        @if.notInBackend = ${!documentNode.context.inBackend}
+        @if.isActive = ${Configuration.setting('Yeebase.Fusion.ContentCacheDebug.enabled')}
+        @if.onlyAdmins = ${Security.hasRole('Yeebase.Fusion.ContentCacheDebug:Debugger')}
+    }
+
+    contentCacheDebugScript = Neos.Fusion:Tag {
+        tagName = 'script'
+        attributes {
+            src = Neos.Fusion:ResourceUri {
+                path = 'resource://Yeebase.Fusion.ContentCacheDebug/Public/Script/main.js'
+            }
+        }
+
+        @if.notInBackend = ${!documentNode.context.inBackend}
+        @if.isActive = ${Configuration.setting('Yeebase.Fusion.ContentCacheDebug.enabled')}
+        @if.onlyAdmins = ${Security.hasRole('Yeebase.Fusion.ContentCacheDebug:Debugger')}
+        @position = 'before closingBodyTag'
+    }
+}

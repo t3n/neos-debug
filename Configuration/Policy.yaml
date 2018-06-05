@@ -1,0 +1,4 @@
+
+roles:
+  'Yeebase.Fusion.ContentCacheDebug:Debugger':
+    abstract: TRUE

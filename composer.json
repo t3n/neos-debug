@@ -1,0 +1,18 @@
+{
+    "description": "",
+    "type": "neos-yeebase",
+    "name": "yeebase/fusion-contentcachedebug",
+    "require": {
+        "neos/neos": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Yeebase\\Fusion\\ContentCacheDebug\\": "Classes/"
+        }
+    },
+    "extra": {
+        "neos": {
+            "package-key": "Yeebase.Fusion.ContentCacheDebug"
+        }
+    }
+}
