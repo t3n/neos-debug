@@ -13,7 +13,10 @@
     },
     "extra": {
         "neos": {
-            "package-key": "Yeebase.Fusion.ContentCacheDebug"
+            "package-key": "Yeebase.Fusion.ContentCacheDebug",
+            "loading-order": {
+                "after": [ "neos/neos" ]
+            }
         }
     }
 }
