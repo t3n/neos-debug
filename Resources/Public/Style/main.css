@@ -27,11 +27,16 @@
   font-weight: normal;
   text-align: left;
   vertical-align: top;
+  background: black;
+  padding: auto;
   color: lightgray;
 }
 
 .content-cache-debug-table td {
   word-wrap: break-word;
+  background: black;
+  padding: auto;
+  color: lightgray;
 }
 
 .content-cache-debug-table i {
