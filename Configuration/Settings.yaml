@@ -2,6 +2,9 @@ t3n:
   Neos:
     Debug:
       enabled: true
+      sql:
+        # Set when a query should be considered as slow query. In ms
+        slowQueryAfter: 1
 
 Neos:
   Neos:

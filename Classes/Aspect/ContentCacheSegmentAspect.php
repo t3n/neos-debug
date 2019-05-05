@@ -7,7 +7,7 @@ namespace t3n\Neos\Debug\Aspect;
 /**
  * This file is part of the t3n.Neos.Debugger package.
  *
- * (c) 2018 yeebase media GmbH
+ * (c) 2019 yeebase media GmbH
  *
  * This package is Open Source Software. For the full copyright and license
  * information, please view the LICENSE file which was distributed with this
@@ -170,7 +170,7 @@ class ContentCacheSegmentAspect
             // on a second page load, when outer caches are created, the uncached will be evaluated via
             // RuntimeContentCache->evaluateUncached() which won't add the cache marker. So we can just append
             // the meta data
-            return $segment . '<!--__CONTENT_CACHE_DEBUG__ ' . json_encode($info) . ' -->';
+            return $segment . '<!--__T3N_CONTENT_CACHE_DEBUG__ ' . json_encode($info) . ' -->';
         }
 
         $segmentHead = substr($segment, 0, strlen($segment) - strlen($this->cacheSegmentTail));
@@ -183,6 +183,6 @@ class ContentCacheSegmentAspect
             $segmentHead = substr($segmentHead, 0, $htmlEndPosition);
         }
 
-        return $segmentHead . '<!--__CONTENT_CACHE_DEBUG__ ' . json_encode($info) . ' -->' . $segmentEnd;
+        return $segmentHead . '<!--__T3N_CONTENT_CACHE_DEBUG__ ' . json_encode($info) . ' -->' . $segmentEnd;
     }
 }

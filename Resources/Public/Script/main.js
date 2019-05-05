@@ -15,7 +15,7 @@ window.__enable_neos_debug__ = (setCookie = false) => {
 
   window.__enable_neos_debug__.active = true;
 
-  const PREFIX = '__CONTENT_CACHE_DEBUG__';
+  const PREFIX = '__T3N_CONTENT_CACHE_DEBUG__';
   const mouseOffset = 10;
 
   // parse content cache values

@@ -4,6 +4,16 @@ declare(strict_types=1);
 
 namespace t3n\Neos\Debug\Logging;
 
+/**
+ * This file is part of the t3n.Neos.Debugger package.
+ *
+ * (c) 2019 yeebase media GmbH
+ *
+ * This package is Open Source Software. For the full copyright and license
+ * information, please view the LICENSE file which was distributed with this
+ * source code.
+ */
+
 use \Neos\Flow\Annotations as Flow;
 use Doctrine\DBAL\Logging\SQLLogger;
 
