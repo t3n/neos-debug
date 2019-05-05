@@ -10,7 +10,6 @@ prototype(t3n.Neos.Debug:Styles) < prototype(Neos.Fusion:Tag) {
 
     @if.notInBackend = ${!documentNode.context.inBackend}
     @if.isActive = ${Configuration.setting('t3n.Neos.Debug.enabled')}
-//    @if.onlyAdmins = ${Security.hasRole('t3n.Neos.Debug:Debugger')}
     @position = 'before closingBodyTag'
 }
 
@@ -24,7 +23,6 @@ prototype(t3n.Neos.Debug:JavaScript) < prototype(Neos.Fusion:Tag) {
 
     @if.notInBackend = ${!documentNode.context.inBackend}
     @if.isActive = ${Configuration.setting('t3n.Neos.Debug.enabled')}
-//    @if.onlyAdmins = ${Security.hasRole('t3n.Neos.Debug:Debugger')}
     @position = 'before closingBodyTag'
 }
 

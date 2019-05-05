@@ -2,6 +2,7 @@ t3n:
   Neos:
     Debug:
       enabled: true
+
 Neos:
   Neos:
     fusion:

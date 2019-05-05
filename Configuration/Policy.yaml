@@ -1,4 +1,0 @@
-
-roles:
-  't3n.Neos.Debug:Debugger':
-    abstract: TRUE
