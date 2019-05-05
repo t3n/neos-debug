@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/t3n/neos-debug.svg?style=svg)](https://circleci.com/gh/t3n/neos-debug) [![Latest Stable Version](https://poser.pugx.org/t3n/neos-debug/v/stable)](https://packagist.org/packages/t3n/neos-debug) [![License](https://poser.pugx.org/t3n/neos-debug/license)](https://packagist.org/packages/t3n/neos-debug)
+
 # t3n.Neos.Debug
 
 The t3n.Neos.Debug package is a small helper package to add a debug panel to your Neos CMS website. At this point in time you're able to debug your content cache configuration as well as sql queries.
