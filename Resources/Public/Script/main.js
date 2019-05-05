@@ -29,7 +29,7 @@ window.__enable_neos_debug__ = (setCookie = false) => {
   const DEBUG_PREFIX = '__T3N_NEOS_DEBUG__';
   const debugValuesWalker = document.createTreeWalker(document.getRootNode(), NodeFilter.SHOW_COMMENT, node => (node.nodeValue.indexOf(DEBUG_PREFIX) === 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP), false);
   const debugData = null;
-  const cacheInfo = JSON.parse(debugValuesWalker.nextNode().nodeValue.substring(DEBUG_PREFIX.length));
+  const debugInfos = JSON.parse(debugValuesWalker.nextNode().nodeValue.substring(DEBUG_PREFIX.length));
 
   const infoElements = [];
   const createInfoElement = ({ parentNode, cacheInfo, index }) => {
@@ -176,17 +176,82 @@ window.__enable_neos_debug__ = (setCookie = false) => {
     return 0;
   });
 
+  const sqlTable = (() => {
+    const container = document.createElement('div');
+    container.classList.add('t3n__content-cache-debug-list');
+
+    const sqlLegend = document.createElement('div');
+    sqlLegend.innerHTML = '<h3>SQL Informations</h3><div class="sql-meta"><h4>Queries: ' + debugInfos.sqlData.queryCount + ' with  ' + debugInfos.sqlData.executionTime + ' ms execution time</h4><div>';
+    container.appendChild(sqlLegend);
+
+    const infoTable = document.createElement('table');
+    infoTable.classList.add('t3n__debug-info-table');
+
+    const headRow = document.createElement('tr');
+    headRow.innerHTML = '<th>Table name</th><th>Execution count</th><th>Total execution time</th>';
+    infoTable.appendChild(headRow);
+
+    Object.keys(debugInfos.sqlData.tables).map(table => {
+      const row = document.createElement('tr');
+      row.innerHTML = '<td>' + table + '</td><td> ' + debugInfos.sqlData.tables[table].queryCount + '</td><td>' + Number(debugInfos.sqlData.tables[table].executionTime).toFixed(2) + ' ms</td>';
+
+      infoTable.appendChild(row);
+    });
+    container.appendChild(infoTable);
+
+    slowQueryLegend = document.createElement('div');
+    slowQueryLegend.innerHTML = '<h4>Slow Queries:' + debugInfos.sqlData.slowQueries.length + '</h4>';
+    container.appendChild(slowQueryLegend);
+
+    slowQueryTable = document.createElement('table');
+    slowQueryTable.classList.add('t3n__debug-info-table');
+    const slowQueryHeadRow = document.createElement('tr');
+    slowQueryHeadRow.innerHTML = '<th>Table</th><th>Execution time</th><th>SQL</th><th></th>';
+    slowQueryTable.appendChild(slowQueryHeadRow);
+
+    debugInfos.sqlData.slowQueries.forEach(({ executionMS, params, sql, table }) => {
+      const queryRow = document.createElement('tr');
+      queryRow.classList.add('cache-details');
+      const detailCell = document.createElement('td');
+      detailCell.innerHTML = sql + '<br /><strong>Params:</strong><br/>' + params.map(param => '<span class="tag">' + param + '</span>');
+      detailCell.setAttribute('colspan', 3);
+
+      queryRow.appendChild(detailCell);
+
+      const row = document.createElement('tr');
+      row.innerHTML = '<td>' + table + '</td><td>' + Number(executionMS).toFixed(2) + ' ms</td><td>' + sql.substring(0, 50) + '...</td>';
+
+      const actionCell = document.createElement('td');
+      const toggleSqlQuery = document.createElement('button');
+      toggleSqlQuery.innerText = 'Show full query';
+      toggleSqlQuery.addEventListener('click', () => {
+        queryRow.classList.toggle('-show');
+        toggleSqlQuery.classList.toggle('-active');
+      });
+      actionCell.appendChild(toggleSqlQuery);
+      row.appendChild(actionCell);
+      slowQueryTable.appendChild(row);
+      slowQueryTable.appendChild(queryRow);
+    });
+    container.appendChild(slowQueryTable);
+
+    return {
+      show: () => document.body.appendChild(container),
+      hide: () => container.remove()
+    };
+  })();
+
   // build up cache table for cache module
   const cacheTable = (() => {
     const container = document.createElement('div');
     container.classList.add('t3n__content-cache-debug-list');
 
     const cacheLegend = document.createElement('div');
-    cacheLegend.innerHTML = '<h3>Cache Informations</h3><div class="cache-meta"><div><h4>Hits: ' + cacheInfo.cCacheHits + '</h4></div><div><h4>Misses: ' + cacheInfo.cCacheMisses + '</h4></div></div>';
+    cacheLegend.innerHTML = '<h3>Cache Informations</h3><div class="cache-meta"><div><h4>Hits: ' + debugInfos.cCacheHits + '</h4></div><div><h4>Misses: ' + debugInfos.cCacheMisses + '</h4></div></div>';
     container.appendChild(cacheLegend);
 
     const infoTable = document.createElement('table');
-    infoTable.classList.add('t3n__cache-info-table');
+    infoTable.classList.add('t3n__debug-info-table');
 
     const headRow = document.createElement('tr');
     headRow.innerHTML = '<th>Mode</th><th>Fusion path</th><th>';
@@ -241,12 +306,13 @@ window.__enable_neos_debug__ = (setCookie = false) => {
 
   let infoVisible = false;
   let listVisible = false;
+  let sqlInfosVisible = false;
 
   const shelf = document.createElement('div');
   shelf.classList.add('t3n__content-cache-debug-shelf');
 
   const parseTime = document.createElement('div');
-  parseTime.innerText = cacheInfo.renderTime + ' ms render time';
+  parseTime.innerText = debugInfos.renderTime + ' ms render time';
 
   shelf.appendChild(parseTime);
 
@@ -280,11 +346,20 @@ window.__enable_neos_debug__ = (setCookie = false) => {
   shelf.appendChild(infoButton);
 
   const sql = document.createElement('span');
-  sql.innerText = '🗄 SQL (' + cacheInfo.sqlData.queryCount + ' queries)';
+  sql.innerText = '🗄 SQL (' + debugInfos.sqlData.queryCount + ' queries, ' + debugInfos.sqlData.slowQueries.length + ' are slow)';
+  sql.addEventListener('click', () => {
+    if (sqlInfosVisible) {
+      sqlTable.hide();
+    } else {
+      sqlTable.show();
+    }
+    sql.classList.toggle('-active');
+    sqlInfosVisible = !sqlInfosVisible;
+  });
   shelf.appendChild(sql);
 
   const listButton = document.createElement('span');
-  listButton.innerText = '⚡️ Cache (hits: ' + cacheInfo.cCacheHits + ', misses: ' + cacheInfo.cCacheMisses + ')';
+  listButton.innerText = '⚡️ Cache (hits: ' + debugInfos.cCacheHits + ', misses: ' + debugInfos.cCacheMisses + ')';
   listButton.addEventListener('click', () => {
     if (listVisible) {
       cacheTable.hide();

@@ -63,7 +63,7 @@ class CollectDebugInformationAspect
     }
 
     /**
-     * @Flow\Around("method(Neos\Neos\View\FusionView->render()) && t3n\Neos\Debug\Aspect\ContentCacheSegmentAspect->debuggingActive")
+     * @Flow\Around("method(Neos\Neos\View\FusionView->render()) && t3n\Neos\Debug\Aspect\CollectDebugInformationAspect->debuggingActive")
      *
      * @param \Neos\Flow\AOP\JoinPointInterface $joinPoint
      */
@@ -79,8 +79,9 @@ class CollectDebugInformationAspect
             'renderTime' => round($endRenderAt - $startRenderAt, 2),
             'sqlData' => [
                 'queryCount' => $this->sqlLoggingStack->queryCount,
-                'executionTime' => $this->sqlLoggingStack->executionTime,
-                'tables' => $this->sqlLoggingStack->tables
+                'executionTime' => round($this->sqlLoggingStack->executionTime, 2),
+                'tables' => $this->sqlLoggingStack->tables,
+                'slowQueries' => $this->sqlLoggingStack->slowQueries,
             ],
             'cCacheHits' => $this->contentCacheHits,
             'cCacheMisses' => $this->contentCacheMisses,
@@ -92,7 +93,7 @@ class CollectDebugInformationAspect
     }
 
     /**
-     * @Flow\Before("method(Neos\Neos\Controller\Frontend\NodeController->showAction()) && t3n\Neos\Debug\Aspect\ContentCacheSegmentAspect->debuggingActive")
+     * @Flow\Before("method(Neos\Neos\Controller\Frontend\NodeController->showAction()) && t3n\Neos\Debug\Aspect\CollectDebugInformationAspect->debuggingActive")
      */
     public function startSqlLogging(\Neos\Flow\AOP\JoinPointInterface $joinPoint): void
     {
@@ -101,7 +102,7 @@ class CollectDebugInformationAspect
     }
 
     /**
-     * @Flow\AfterReturning("method(Neos\Fusion\Core\Cache\ContentCache->getCachedSegment()) && t3n\Neos\Debug\Aspect\ContentCacheSegmentAspect->debuggingActive")
+     * @Flow\AfterReturning("method(Neos\Fusion\Core\Cache\ContentCache->getCachedSegment()) && t3n\Neos\Debug\Aspect\CollectDebugInformationAspect->debuggingActive")
      */
     public function addCacheMiss(\Neos\Flow\AOP\JoinPointInterface $joinPoint): void
     {
@@ -112,7 +113,7 @@ class CollectDebugInformationAspect
     }
 
     /**
-     * @Flow\AfterReturning("method(Neos\Fusion\Core\Cache\ContentCache->replaceCachePlaceholders()) && t3n\Neos\Debug\Aspect\ContentCacheSegmentAspect->debuggingActive")
+     * @Flow\AfterReturning("method(Neos\Fusion\Core\Cache\ContentCache->replaceCachePlaceholders()) && t3n\Neos\Debug\Aspect\CollectDebugInformationAspect->debuggingActive")
      */
     public function addCacheHit(\Neos\Flow\AOP\JoinPointInterface $joinPoint): void
     {

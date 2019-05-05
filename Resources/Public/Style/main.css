@@ -166,7 +166,7 @@
   cursor: pointer;
 }
 
-.t3n__cache-info-table button {
+.t3n__debug-info-table button {
   background: none;
   color: #2a2a2a;
   border: 2px solid #2a2a2a;
@@ -174,55 +174,64 @@
   border-radius: 4px;
   margin-right: 5px;
 }
-.t3n__cache-info-table button.-active {
+.t3n__debug-info-table button.-active {
   background-color: #f9423a;
   border-color: #f9423a;
   color: #fff;
 }
 
-.t3n__cache-info-table {
+.t3n__debug-info-table {
   color: #2a2a2a;
   width: 100%;
 }
-.t3n__cache-info-table th {
+
+.t3n__debug-info-table span.tag {
+  font-style: normal;
+  background: #f9423a;
+  color: #fff;
+  padding: 0 5px;
+  border-radius: 2px;
+  margin: 0 5px;
+}
+.t3n__debug-info-table th {
   font-weight: bold;
   font-size: 16px;
 }
-.t3n__cache-info-table tr {
+.t3n__debug-info-table tr {
   font-size: 13px;
   margin-bottom: 5px;
   border-bottom: 1px solid #a2a2a2;
 }
-.t3n__cache-info-table td.cached {
+.t3n__debug-info-table td.cached {
   background-color: rgba(52, 232, 143, 0.4);
 }
-.t3n__cache-info-table td.uncached {
+.t3n__debug-info-table td.uncached {
   background-color: rgba(249, 66, 58, 0.4);
 }
-.t3n__cache-info-table td.dynamic {
+.t3n__debug-info-table td.dynamic {
   background-color: rgba(251, 190, 53, 0.4);
 }
-.t3n__cache-info-table tr.cache-details {
+.t3n__debug-info-table tr.cache-details {
   display: none;
 }
-.t3n__cache-info-table tr.cache-details .t3n__content-cache-debug-table th,
-.t3n__cache-info-table tr.cache-details .t3n__content-cache-debug-table td {
+.t3n__debug-info-table tr.cache-details .t3n__content-cache-debug-table th,
+.t3n__debug-info-table tr.cache-details .t3n__content-cache-debug-table td {
   font-size: 13px;
 }
-.t3n__cache-info-table tr.cache-details .t3n__content-cache-debug-table {
+.t3n__debug-info-table tr.cache-details .t3n__content-cache-debug-table {
   position: relative;
 }
-.t3n__cache-info-table tr.cache-details.-show {
+.t3n__debug-info-table tr.cache-details.-show {
   display: table-row;
 }
-.t3n__cache-info-table td {
+.t3n__debug-info-table td {
   padding: 5px;
 }
-.t3n__cache-info-table .fusion-prototype {
+.t3n__debug-info-table .fusion-prototype {
   display: none;
   margin-bottom: 5px;
 }
-.t3n__cache-info-table .fusion-prototype span {
+.t3n__debug-info-table .fusion-prototype span {
   font-style: normal;
   background: #f9423a;
   color: #fff;
@@ -230,7 +239,7 @@
   border-radius: 2px;
 }
 
-.t3n__cache-info-table tr.-show-prototype .fusion-prototype {
+.t3n__debug-info-table tr.-show-prototype .fusion-prototype {
   display: block;
 }
 

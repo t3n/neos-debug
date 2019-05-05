@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace t3n\Neos\Debug\Logging;
 
+use \Neos\Flow\Annotations as Flow;
 use Doctrine\DBAL\Logging\SQLLogger;
 
 class DebugStack implements SQLLogger
@@ -33,6 +34,15 @@ class DebugStack implements SQLLogger
      */
     protected $startTime = 0;
 
+    public $slowQueries = [];
+
+    /**
+     * @Flow\InjectConfiguration(path="sql.slowQueryAfter")
+     *
+     * @var double
+     */
+    protected $slowQueryAfter;
+
     /**
      * @param mixed $sql
      * @param mixed[]|null $params
@@ -50,6 +60,10 @@ class DebugStack implements SQLLogger
         $executionTime = (microtime(true) - $this->startTime) * 1000;
         $this->queries[$this->queryCount]['executionMS'] = $executionTime;
         $this->executionTime += $executionTime;
+
+        if ($executionTime > $this->slowQueryAfter) {
+            $this->slowQueries[] = $this->queries[$this->queryCount];
+        }
 
         $table = $this->queries[$this->queryCount]['table'];
         if (! array_key_exists($table, $this->tables)) {
