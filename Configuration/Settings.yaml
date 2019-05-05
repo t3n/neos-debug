@@ -4,7 +4,7 @@ t3n:
       enabled: true
       sql:
         # Set when a query should be considered as slow query. In ms
-        slowQueryAfter: 1
+        slowQueryAfter: 10
 
 Neos:
   Neos:
