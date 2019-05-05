@@ -21,7 +21,7 @@ Yeebase:
 ```
 
 Now the package is active and will render some metadata in your html output if the current user
-inherits the role `Yeebase.Fusion.ContentCacheDebug:Debugger`. Only user with this role will be able to see the debug information.
+inherits the role `Yeebase.Fusion.ContentCacheDebug:Debug`. Only user with this role will be able to see the debug information.
 
 To get the debugger running you now need to include some javascript and css to acutally be able to render the output. For Neos we already adjusted the `Neos.Neos.Page` prototype. Include this in your Root.fusion of your site package:
 ```

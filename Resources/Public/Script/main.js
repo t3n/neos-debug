@@ -1,36 +1,40 @@
-window.__enable_content_cache_debug__ = (setCookie = false) => {
-  if (window.__enable_content_cache_debug__.active) {
+window.__enable_neos_debug__ = (setCookie = false) => {
+  if (window.__enable_neos_debug__.active) {
     return;
   }
 
   if (setCookie) {
-    document.cookie = '__content_cache_debug__=true';
+    document.cookie = '__neos_debug__=true';
   }
 
-  console.log('%c <Neos Content Cache Debug Tool> ', 'color: white; background: #00ADEE; line-height: 20px; font-weight: bold');
+  console.log('%c Starting Neos Debug Tool ... ', 'color: white; background: #f9423a; line-height: 20px; font-weight: bold');
+  if (!setCookie) {
+    console.log('Start the Debug tool with "__enable_neos_debug__(true)" to always start up the Debug tool on page load');
+  }
+  console.log('If you have any issues or feature requests checkout the repository at https://github.com/t3n/neos-debug');
 
-  window.__enable_content_cache_debug__.active = true;
+  window.__enable_neos_debug__.active = true;
 
   const PREFIX = '__CONTENT_CACHE_DEBUG__';
-  const mouseOffset = 5;
+  const mouseOffset = 10;
 
-  const treeWalker = document.createTreeWalker(
-    document.getRootNode(),
-    NodeFilter.SHOW_COMMENT,
-    node => node.nodeValue.indexOf(PREFIX) === 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP,
-    false
-  );
-
+  // parse content cache values
+  const cCacheTreeWalker = document.createTreeWalker(document.getRootNode(), NodeFilter.SHOW_COMMENT, node => (node.nodeValue.indexOf(PREFIX) === 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP), false);
   const nodes = [];
-  while (treeWalker.nextNode()) {
-    nodes.push(treeWalker.currentNode);
+  while (cCacheTreeWalker.nextNode()) {
+    nodes.push(cCacheTreeWalker.currentNode);
   }
+
+  // parse debug values
+  const DEBUG_PREFIX = '__T3N_NEOS_DEBUG__';
+  const debugValuesWalker = document.createTreeWalker(document.getRootNode(), NodeFilter.SHOW_COMMENT, node => (node.nodeValue.indexOf(DEBUG_PREFIX) === 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP), false);
+  const debugData = null;
+  const cacheInfo = JSON.parse(debugValuesWalker.nextNode().nodeValue.substring(DEBUG_PREFIX.length));
 
   const infoElements = [];
   const createInfoElement = ({ parentNode, cacheInfo, index }) => {
-
     const container = document.createElement('div');
-    container.classList.add('content-cache-debug-container');
+    container.classList.add('t3n__content-cache-debug-container');
 
     const button = document.createElement('button');
     button.innerText = '💡';
@@ -41,11 +45,16 @@ window.__enable_content_cache_debug__ = (setCookie = false) => {
     container.appendChild(overlay);
 
     const table = document.createElement('table');
-    table.classList.add('content-cache-debug-table');
+    table.classList.add('t3n__content-cache-debug-table');
 
     const clone = parentNode.cloneNode();
     clone.innerHTML = '';
-    cacheInfo['markup'] = clone.outerHTML.replace(/<\/.+/, '').replace(/</g, '&lt;').replace(/>/g, '&gt;').substring(0, 50);
+    cacheInfo['markup'] =
+      clone.outerHTML
+        .replace(/<\/.+/, '')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .substring(0, 150) + ' ...';
 
     Object.keys(cacheInfo).forEach(key => {
       const tr = document.createElement('tr');
@@ -65,12 +74,15 @@ window.__enable_content_cache_debug__ = (setCookie = false) => {
       if (Array.isArray(value)) {
         arrayValue = value.map((v, i) => `<i>${i}:</i> ${v}`);
       } else if (typeof value === 'object') {
-          arrayValue = Object.keys(value).map(subKey => `<i>${subKey}:</i> ${value[subKey]}`);
+        arrayValue = Object.keys(value).map(subKey => `<i>${subKey}:</i> ${value[subKey]}`);
       }
 
       if (arrayValue) {
         if (arrayValue.length > 10) {
-          arrayValue = arrayValue.slice(0, 5).concat(['....']).concat(arrayValue.slice(arrayValue.length - 5));
+          arrayValue = arrayValue
+            .slice(0, 5)
+            .concat(['....'])
+            .concat(arrayValue.slice(arrayValue.length - 5));
         }
         td.innerHTML = arrayValue.join('<br>');
       } else {
@@ -100,7 +112,7 @@ window.__enable_content_cache_debug__ = (setCookie = false) => {
       }
 
       table.setAttribute('style', `left: ${x}px; top: ${y}px`);
-    }
+    };
 
     button.addEventListener('click', () => {
       container.classList.add('removed');
@@ -149,9 +161,12 @@ window.__enable_content_cache_debug__ = (setCookie = false) => {
   nodes.forEach((node, index) => {
     const cacheInfo = JSON.parse(node.nodeValue.substring(PREFIX.length));
     const parentNode = node.previousElementSibling;
+
+    // build up
     createInfoElement({ parentNode, cacheInfo, index });
   });
 
+  // sort elements by fusion path
   infoElements.sort((a, b) => {
     const fa = a.cacheInfo.fusionPath;
     const fb = b.cacheInfo.fusionPath;
@@ -161,68 +176,87 @@ window.__enable_content_cache_debug__ = (setCookie = false) => {
     return 0;
   });
 
+  // build up cache table for cache module
   const cacheTable = (() => {
     const container = document.createElement('div');
-    container.classList.add('content-cache-debug-list');
+    container.classList.add('t3n__content-cache-debug-list');
 
-    infoElements.forEach(({ cacheInfo, table }) => {
+    const cacheLegend = document.createElement('div');
+    cacheLegend.innerHTML = '<h3>Cache Informations</h3><div class="cache-meta"><div><h4>Hits: ' + cacheInfo.cCacheHits + '</h4></div><div><h4>Misses: ' + cacheInfo.cCacheMisses + '</h4></div></div>';
+    container.appendChild(cacheLegend);
 
-      const positionTable = event => {
-        let x = event.pageX + mouseOffset - window.scrollX + container.scrollLeft;
-        let y = event.pageY + mouseOffset - window.scrollY + container.scrollTop;
+    const infoTable = document.createElement('table');
+    infoTable.classList.add('t3n__cache-info-table');
 
-        const rightEdge = x + table.offsetWidth - container.scrollLeft;
-        if (rightEdge > window.innerWidth) {
-          x -= rightEdge - window.innerWidth;
-        }
+    const headRow = document.createElement('tr');
+    headRow.innerHTML = '<th>Mode</th><th>Fusion path</th><th>';
+    infoTable.appendChild(headRow);
 
-        const bottomEdge = y + table.offsetHeight - container.scrollTop;
-        if (bottomEdge > window.innerHeight && table.offsetHeight < window.innerHeight) {
-          y -= bottomEdge - window.innerHeight;
-        }
+    infoElements.forEach(({ cacheInfo, table, show }) => {
+      const detailRow = document.createElement('tr');
+      detailRow.classList.add('cache-details');
+      detailRow.innerHTML = '<td></td>';
+      const detailCell = document.createElement('td');
 
-        table.setAttribute('style', `left: ${x}px; top: ${y}px`);
-      };
+      // we clone the node so the inspect button won't trigger the remove on this table
+      detailCell.appendChild(table.cloneNode(true));
+      detailRow.appendChild(detailCell);
+      detailRow.appendChild(document.createElement('td'));
 
-      const div = document.createElement('div');
-      div.classList.add(cacheInfo.mode);
-      div.innerHTML = cacheInfo.fusionPath.replace(/\//g, '<i>/</i>').replace(/<([^>\/]{2,})>/g, '<span>&lt;$1&gt;</span>');
+      const row = document.createElement('tr');
+      const fusionPath = cacheInfo.fusionPath.replace(/\//g, '<i>/</i>').replace(/<([^>\/]{2,})>/g, '<span class="fusion-prototype"><span>$1</span></span>');
+      row.innerHTML = '<td class="' + cacheInfo.mode + '">' + cacheInfo.mode + '</td><td>' + fusionPath + '</td>';
 
-      div.addEventListener('mouseenter', event => {
-        container.appendChild(table);
-        positionTable(event);
+      const actions = document.createElement('td');
+      const togglePrototype = document.createElement('button');
+      togglePrototype.innerText = 'Show/Hide prototype';
+
+      togglePrototype.addEventListener('click', () => {
+        row.classList.toggle('-show-prototype');
+        togglePrototype.classList.toggle('-active');
       });
 
-      div.addEventListener('mousemove', positionTable);
+      actions.appendChild(togglePrototype);
 
-      div.addEventListener('mouseleave', () => {
-          table.remove();
+      const toggleCacheInfos = document.createElement('button');
+      toggleCacheInfos.innerText = 'Details';
+      toggleCacheInfos.addEventListener('click', () => {
+        detailRow.classList.toggle('-show');
+        toggleCacheInfos.classList.toggle('-active');
       });
+      actions.appendChild(toggleCacheInfos);
 
-      container.appendChild(div);
-
+      row.appendChild(actions);
+      infoTable.appendChild(row);
+      infoTable.appendChild(detailRow);
     });
+
+    container.appendChild(infoTable);
 
     return {
       show: () => document.body.appendChild(container),
       hide: () => container.remove()
-    }
+    };
   })();
 
   let infoVisible = false;
   let listVisible = false;
 
   const shelf = document.createElement('div');
-  shelf.classList.add('content-cache-debug-shelf');
+  shelf.classList.add('t3n__content-cache-debug-shelf');
 
-  const infoButton = document.createElement('button');
-  infoButton.innerText = '🔦';
+  const parseTime = document.createElement('div');
+  parseTime.innerText = cacheInfo.renderTime + ' ms render time';
+
+  shelf.appendChild(parseTime);
+
+  const infoButton = document.createElement('span');
+  infoButton.innerText = '🔦 Inspect';
 
   let reposition = null;
   const onScroll = () => {
-    console.log('now');
     if (reposition === null) {
-        infoElements.forEach(e => e.hide());
+      infoElements.forEach(e => e.hide());
     }
     clearTimeout(reposition);
     reposition = setTimeout(() => {
@@ -239,34 +273,40 @@ window.__enable_content_cache_debug__ = (setCookie = false) => {
       infoElements.forEach(e => e.show());
       window.addEventListener('scroll', onScroll);
     }
+    infoButton.classList.toggle('-active');
     infoVisible = !infoVisible;
   });
 
   shelf.appendChild(infoButton);
 
-  const listButton = document.createElement('button');
-  listButton.innerText = '📋';
+  const sql = document.createElement('span');
+  sql.innerText = '🗄 SQL (' + cacheInfo.sqlData.queryCount + ' queries)';
+  shelf.appendChild(sql);
+
+  const listButton = document.createElement('span');
+  listButton.innerText = '⚡️ Cache (hits: ' + cacheInfo.cCacheHits + ', misses: ' + cacheInfo.cCacheMisses + ')';
   listButton.addEventListener('click', () => {
     if (listVisible) {
-        cacheTable.hide();
+      cacheTable.hide();
     } else {
-        cacheTable.show();
+      cacheTable.show();
     }
+    listButton.classList.toggle('-active');
     listVisible = !listVisible;
   });
 
   shelf.appendChild(listButton);
 
-  const closeButton = document.createElement('button');
-  closeButton.innerText = '❌';
+  const closeButton = document.createElement('span');
+  closeButton.innerText = '🚫 Close';
 
   closeButton.addEventListener('click', () => {
     shelf.remove();
     infoVisible && infoElements.forEach(e => e.hide());
     listVisible && cacheTable.hide();
-    window.__enable_content_cache_debug__.active = false;
-    document.cookie = "__content_cache_debug__=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-    console.log('%c </Neos Content Cache Debug Tool> ', 'color: white; background: #00ADEE; line-height: 20px; font-weight: bold');
+    window.__enable_neos_debug__.active = false;
+    document.cookie = '__content_cache_debug__=; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+    console.log('%c Closing Neos Debug Tool> ', 'color: white; background: #f9423a; line-height: 20px; font-weight: bold');
   });
 
   shelf.appendChild(closeButton);
@@ -275,13 +315,13 @@ window.__enable_content_cache_debug__ = (setCookie = false) => {
 };
 
 (() => {
-  const cookies = document.cookie.split(';').map(v => v.trim()).reduce((c, s) => {
-    const p = s.split('=');
-    c[p[0]] = p[1];
-    return c;
-  }, {});
-
-  if (cookies.__content_cache_debug__ === "true") {
-    window.onload = window.__enable_content_cache_debug__
-  }
+  const cookies = document.cookie
+    .split(';')
+    .map(v => v.trim())
+    .forEach(c => {
+      const p = c.split('=');
+      if (p[0] === '__neos_debug__' && p[1] === 'true') {
+        window.onload = window.__enable_neos_debug__;
+      }
+    });
 })();

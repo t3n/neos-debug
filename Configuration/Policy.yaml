@@ -1,4 +1,4 @@
 
 roles:
-  'Yeebase.Fusion.ContentCacheDebug:Debugger':
+  't3n.Neos.Debug:Debugger':
     abstract: TRUE

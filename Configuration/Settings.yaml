@@ -1,9 +1,9 @@
-Yeebase:
-  Fusion:
-    ContentCacheDebug:
-      enabled: false
+t3n:
+  Neos:
+    Debug:
+      enabled: true
 Neos:
   Neos:
     fusion:
       autoInclude:
-        'Yeebase.Fusion.ContentCacheDebug': false
+        't3n.Neos.Debug': true

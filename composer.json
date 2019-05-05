@@ -1,19 +1,19 @@
 {
-    "name": "yeebase/fusion-contentcachedebug",
-    "description": "Helper package to visualize fusion content cache",
+    "name": "t3n/neos-debug",
+    "description": "Helper package to visualize debug inforamations for neos including fusion content cache",
     "license": "MIT",
-    "type": "neos-yeebase",
+    "type": "neos-package",
     "require": {
-        "neos/fusion": "~3.3.0 || ~4.0"
+        "neos/neos": "~3.3.0 || ~4.0"
     },
     "autoload": {
         "psr-4": {
-            "Yeebase\\Fusion\\ContentCacheDebug\\": "Classes/"
+            "t3n\\Neos\\Debug\\": "Classes/"
         }
     },
     "extra": {
         "neos": {
-            "package-key": "Yeebase.Fusion.ContentCacheDebug",
+            "package-key": "t3n.Neos.Debug",
             "loading-order": {
                 "after": [ "neos/neos" ]
             }

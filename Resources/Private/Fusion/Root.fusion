@@ -1,29 +1,34 @@
+
+prototype(t3n.Neos.Debug:Styles) < prototype(Neos.Fusion:Tag) {
+    tagName = 'link'
+    attributes {
+        rel = 'stylesheet'
+        href = Neos.Fusion:ResourceUri {
+            path = 'resource://t3n.Neos.Debug/Public/Style/main.css'
+        }
+    }
+
+    @if.notInBackend = ${!documentNode.context.inBackend}
+    @if.isActive = ${Configuration.setting('t3n.Neos.Debug.enabled')}
+//    @if.onlyAdmins = ${Security.hasRole('t3n.Neos.Debug:Debugger')}
+    @position = 'before closingBodyTag'
+}
+
+prototype(t3n.Neos.Debug:JavaScript) < prototype(Neos.Fusion:Tag) {
+    tagName = 'script'
+    attributes {
+        src = Neos.Fusion:ResourceUri {
+            path = 'resource://t3n.Neos.Debug/Public/Script/main.js'
+        }
+    }
+
+    @if.notInBackend = ${!documentNode.context.inBackend}
+    @if.isActive = ${Configuration.setting('t3n.Neos.Debug.enabled')}
+//    @if.onlyAdmins = ${Security.hasRole('t3n.Neos.Debug:Debugger')}
+    @position = 'before closingBodyTag'
+}
+
 prototype(Neos.Neos:Page) {
-    head.contentCacheDebugStyle = Neos.Fusion:Tag {
-        tagName = 'link'
-        attributes {
-            rel = 'stylesheet'
-            href = Neos.Fusion:ResourceUri {
-                path = 'resource://Yeebase.Fusion.ContentCacheDebug/Public/Style/main.css'
-            }
-        }
-
-        @if.notInBackend = ${!documentNode.context.inBackend}
-        @if.isActive = ${Configuration.setting('Yeebase.Fusion.ContentCacheDebug.enabled')}
-        @if.onlyAdmins = ${Security.hasRole('Yeebase.Fusion.ContentCacheDebug:Debugger')}
-    }
-
-    contentCacheDebugScript = Neos.Fusion:Tag {
-        tagName = 'script'
-        attributes {
-            src = Neos.Fusion:ResourceUri {
-                path = 'resource://Yeebase.Fusion.ContentCacheDebug/Public/Script/main.js'
-            }
-        }
-
-        @if.notInBackend = ${!documentNode.context.inBackend}
-        @if.isActive = ${Configuration.setting('Yeebase.Fusion.ContentCacheDebug.enabled')}
-        @if.onlyAdmins = ${Security.hasRole('Yeebase.Fusion.ContentCacheDebug:Debugger')}
-        @position = 'before closingBodyTag'
-    }
+    head.contentCacheDebugStyle = t3n.Neos.Debug:Styles
+    contentCacheDebugScript = t3n.Neos.Debug:JavaScript
 }
