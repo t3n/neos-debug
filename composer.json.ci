@@ -1,0 +1,31 @@
+{
+  "name": "t3n/test-setup",
+  "description": "Test setup for flow packages",
+  "config": {
+    "vendor-dir": "Packages/Libraries",
+    "bin-dir": "bin"
+  },
+  "require": {
+    "neos/flow": "~5.2.0",
+    "neos/buildessentials": "~5.2.0",
+    "t3n/flow-healthstatus": "@dev",
+    "t3n/coding-standard": "~1.0.0"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "3.3.2",
+    "phpunit/phpunit": "~7.1",
+    "mikey179/vfsstream": "~1.6"
+  },
+  "repositories": {
+    "srcPackage": {
+      "type": "path",
+      "url": "./neos-debug"
+    }
+  },
+  "scripts": {
+    "post-update-cmd": "Neos\\Flow\\Composer\\InstallerScripts::postUpdateAndInstall",
+    "post-install-cmd": "Neos\\Flow\\Composer\\InstallerScripts::postUpdateAndInstall",
+    "post-package-update": "Neos\\Flow\\Composer\\InstallerScripts::postPackageUpdateAndInstall",
+    "post-package-install": "Neos\\Flow\\Composer\\InstallerScripts::postPackageUpdateAndInstall"
+  }
+}
