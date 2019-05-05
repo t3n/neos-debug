@@ -9,24 +9,24 @@ window.__enable_neos_debug__ = (setCookie = false) => {
 
   console.log('%c Starting Neos Debug Tool ... ', 'color: white; background: #f9423a; line-height: 20px; font-weight: bold');
   if (!setCookie) {
-    console.log('Start the Debug tool with "__enable_neos_debug__(true)" to always start up the Debug tool on page load');
+    console.log('Start the Debug tool with "__enable_neos_debug__(true)" to start up the Debug tool on every page load');
   }
   console.log('If you have any issues or feature requests checkout the repository at https://github.com/t3n/neos-debug');
 
   window.__enable_neos_debug__.active = true;
 
   const PREFIX = '__T3N_CONTENT_CACHE_DEBUG__';
+  const DEBUG_PREFIX = '__T3N_NEOS_DEBUG__';
   const mouseOffset = 10;
 
-  // parse content cache values
+  // parse content cache comments
   const cCacheTreeWalker = document.createTreeWalker(document.getRootNode(), NodeFilter.SHOW_COMMENT, node => (node.nodeValue.indexOf(PREFIX) === 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP), false);
-  const nodes = [];
+  const cCacheNodes = [];
   while (cCacheTreeWalker.nextNode()) {
-    nodes.push(cCacheTreeWalker.currentNode);
+    cCacheNodes.push(cCacheTreeWalker.currentNode);
   }
 
   // parse debug values
-  const DEBUG_PREFIX = '__T3N_NEOS_DEBUG__';
   const debugValuesWalker = document.createTreeWalker(document.getRootNode(), NodeFilter.SHOW_COMMENT, node => (node.nodeValue.indexOf(DEBUG_PREFIX) === 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP), false);
   const debugData = null;
   const debugInfos = JSON.parse(debugValuesWalker.nextNode().nodeValue.substring(DEBUG_PREFIX.length));
@@ -37,7 +37,7 @@ window.__enable_neos_debug__ = (setCookie = false) => {
     container.classList.add('t3n__content-cache-debug-container');
 
     const button = document.createElement('button');
-    button.innerText = '💡';
+    button.innerText = '🔎';
     container.appendChild(button);
 
     const overlay = document.createElement('div');
@@ -58,11 +58,11 @@ window.__enable_neos_debug__ = (setCookie = false) => {
 
     Object.keys(cacheInfo).forEach(key => {
       const tr = document.createElement('tr');
-      const th = document.createElement('th');
-      const td = document.createElement('td');
+      const firstCell = document.createElement('td');
+      const secondCell = document.createElement('td');
 
-      th.innerText = key;
-      tr.classList.add(key.toLowerCase());
+      firstCell.innerText = key;
+      secondCell.classList.add(key.toLowerCase());
 
       let value = cacheInfo[key];
 
@@ -84,13 +84,13 @@ window.__enable_neos_debug__ = (setCookie = false) => {
             .concat(['....'])
             .concat(arrayValue.slice(arrayValue.length - 5));
         }
-        td.innerHTML = arrayValue.join('<br>');
+        secondCell.innerHTML = arrayValue.join('<br>');
       } else {
-        td.innerHTML = value;
+        secondCell.innerHTML = value;
       }
 
-      tr.appendChild(th);
-      tr.appendChild(td);
+      tr.appendChild(firstCell);
+      tr.appendChild(secondCell);
       table.appendChild(tr);
     });
 
@@ -128,7 +128,7 @@ window.__enable_neos_debug__ = (setCookie = false) => {
 
     button.addEventListener('mouseleave', () => {
       container.removeChild(table);
-      button.innerText = '💡';
+      button.innerText = '🔎';
     });
 
     infoElements.push({
@@ -158,7 +158,8 @@ window.__enable_neos_debug__ = (setCookie = false) => {
     });
   };
 
-  nodes.forEach((node, index) => {
+  // convert all content cache parts to info elements
+  cCacheNodes.forEach((node, index) => {
     const cacheInfo = JSON.parse(node.nodeValue.substring(PREFIX.length));
     const parentNode = node.previousElementSibling;
 
@@ -166,7 +167,7 @@ window.__enable_neos_debug__ = (setCookie = false) => {
     createInfoElement({ parentNode, cacheInfo, index });
   });
 
-  // sort elements by fusion path
+  // sort info elements by fusion path
   infoElements.sort((a, b) => {
     const fa = a.cacheInfo.fusionPath;
     const fb = b.cacheInfo.fusionPath;
@@ -178,10 +179,10 @@ window.__enable_neos_debug__ = (setCookie = false) => {
 
   const sqlTable = (() => {
     const container = document.createElement('div');
-    container.classList.add('t3n__content-cache-debug-list');
+    container.classList.add('t3n__content-cache-debug-modal');
 
     const sqlLegend = document.createElement('div');
-    sqlLegend.innerHTML = '<h3>SQL Informations</h3><div class="sql-meta"><h4>Queries: ' + debugInfos.sqlData.queryCount + ' with  ' + debugInfos.sqlData.executionTime + ' ms execution time</h4><div>';
+    sqlLegend.innerHTML = `<h3>SQL Information</h3><div class="debug-meta"><p>Queries: ${debugInfos.sqlData.queryCount} with ${debugInfos.sqlData.executionTime} ms execution time</p><div>`;
     container.appendChild(sqlLegend);
 
     const infoTable = document.createElement('table');
@@ -193,33 +194,35 @@ window.__enable_neos_debug__ = (setCookie = false) => {
 
     Object.keys(debugInfos.sqlData.tables).map(table => {
       const row = document.createElement('tr');
-      row.innerHTML = '<td>' + table + '</td><td> ' + debugInfos.sqlData.tables[table].queryCount + '</td><td>' + Number(debugInfos.sqlData.tables[table].executionTime).toFixed(2) + ' ms</td>';
-
+      row.innerHTML = `<td>${table}</td><td>${debugInfos.sqlData.tables[table].queryCount}</td><td>${Number(debugInfos.sqlData.tables[table].executionTime).toFixed(2)} ms</td>`;
       infoTable.appendChild(row);
     });
     container.appendChild(infoTable);
 
     slowQueryLegend = document.createElement('div');
-    slowQueryLegend.innerHTML = '<h4>Slow Queries:' + debugInfos.sqlData.slowQueries.length + '</h4>';
+    slowQueryLegend.classList.add('debug-meta');
+    slowQueryLegend.innerHTML = `<h4>Slow Queries: ${debugInfos.sqlData.slowQueries.length}</h4>`;
     container.appendChild(slowQueryLegend);
 
     slowQueryTable = document.createElement('table');
     slowQueryTable.classList.add('t3n__debug-info-table');
+
     const slowQueryHeadRow = document.createElement('tr');
     slowQueryHeadRow.innerHTML = '<th>Table</th><th>Execution time</th><th>SQL</th><th></th>';
     slowQueryTable.appendChild(slowQueryHeadRow);
 
     debugInfos.sqlData.slowQueries.forEach(({ executionMS, params, sql, table }) => {
       const queryRow = document.createElement('tr');
-      queryRow.classList.add('cache-details');
+      queryRow.classList.add('detail-row');
+
       const detailCell = document.createElement('td');
-      detailCell.innerHTML = sql + '<br /><strong>Params:</strong><br/>' + params.map(param => '<span class="tag">' + param + '</span>');
-      detailCell.setAttribute('colspan', 3);
+      detailCell.innerHTML = `<p class="small">${sql}</p> <strong>Params:</strong><br/>${params.map(param => '<span class="tag">' + param + '</span>')}`;
+      detailCell.setAttribute('colspan', 4);
 
       queryRow.appendChild(detailCell);
 
       const row = document.createElement('tr');
-      row.innerHTML = '<td>' + table + '</td><td>' + Number(executionMS).toFixed(2) + ' ms</td><td>' + sql.substring(0, 50) + '...</td>';
+      row.innerHTML = `<td>${table}</td><td>${Number(executionMS).toFixed(2)} ms</td><td>${sql.substring(0, 50)}...</td>`;
 
       const actionCell = document.createElement('td');
       const toggleSqlQuery = document.createElement('button');
@@ -244,10 +247,10 @@ window.__enable_neos_debug__ = (setCookie = false) => {
   // build up cache table for cache module
   const cacheTable = (() => {
     const container = document.createElement('div');
-    container.classList.add('t3n__content-cache-debug-list');
+    container.classList.add('t3n__content-cache-debug-modal');
 
     const cacheLegend = document.createElement('div');
-    cacheLegend.innerHTML = '<h3>Cache Informations</h3><div class="cache-meta"><div><h4>Hits: ' + debugInfos.cCacheHits + '</h4></div><div><h4>Misses: ' + debugInfos.cCacheMisses + '</h4></div></div>';
+    cacheLegend.innerHTML = `<h3>Cache Information</h3><div class="debug-meta"><div><p>Hits: ${debugInfos.cCacheHits}</p></div><div><p>Misses: ${debugInfos.cCacheMisses}</p></div></div>`;
     container.appendChild(cacheLegend);
 
     const infoTable = document.createElement('table');
@@ -259,9 +262,10 @@ window.__enable_neos_debug__ = (setCookie = false) => {
 
     infoElements.forEach(({ cacheInfo, table, show }) => {
       const detailRow = document.createElement('tr');
-      detailRow.classList.add('cache-details');
-      detailRow.innerHTML = '<td></td>';
+      detailRow.classList.add('detail-row');
+
       const detailCell = document.createElement('td');
+      detailCell.setAttribute('colspan', 3);
 
       // we clone the node so the inspect button won't trigger the remove on this table
       detailCell.appendChild(table.cloneNode(true));
@@ -270,7 +274,7 @@ window.__enable_neos_debug__ = (setCookie = false) => {
 
       const row = document.createElement('tr');
       const fusionPath = cacheInfo.fusionPath.replace(/\//g, '<i>/</i>').replace(/<([^>\/]{2,})>/g, '<span class="fusion-prototype"><span>$1</span></span>');
-      row.innerHTML = '<td class="' + cacheInfo.mode + '">' + cacheInfo.mode + '</td><td>' + fusionPath + '</td>';
+      row.innerHTML = `<td class="${cacheInfo.mode}">${cacheInfo.mode}</td><td>${fusionPath}</td>`;
 
       const actions = document.createElement('td');
       const togglePrototype = document.createElement('button');
@@ -346,7 +350,7 @@ window.__enable_neos_debug__ = (setCookie = false) => {
   shelf.appendChild(infoButton);
 
   const sql = document.createElement('span');
-  sql.innerText = '🗄 SQL (' + debugInfos.sqlData.queryCount + ' queries, ' + debugInfos.sqlData.slowQueries.length + ' are slow)';
+  sql.innerText = `🗄 SQL (${debugInfos.sqlData.queryCount} queries, ${debugInfos.sqlData.slowQueries.length} are slow)`;
   sql.addEventListener('click', () => {
     if (sqlInfosVisible) {
       sqlTable.hide();
@@ -359,7 +363,7 @@ window.__enable_neos_debug__ = (setCookie = false) => {
   shelf.appendChild(sql);
 
   const listButton = document.createElement('span');
-  listButton.innerText = '⚡️ Cache (hits: ' + debugInfos.cCacheHits + ', misses: ' + debugInfos.cCacheMisses + ')';
+  listButton.innerText = `⚡️ Cache (hits: ${debugInfos.cCacheHits}, misses: ${debugInfos.cCacheMisses})`;
   listButton.addEventListener('click', () => {
     if (listVisible) {
       cacheTable.hide();

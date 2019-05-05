@@ -23,6 +23,7 @@
   line-height: 1.5em;
   position: absolute;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  z-index: 10002;
 }
 .t3n__content-cache-debug-table tr {
   padding: 10px 0;
@@ -55,7 +56,7 @@
   border-radius: 2px;
 }
 
-.t3n__content-cache-debug-shelf span:first-child {
+.t3n__content-cache-debug-shelf div:first-child {
   border-left: none;
   border-top-left-radius: 4px;
 }
@@ -92,11 +93,11 @@
   border: none;
   z-index: 10001;
   border-radius: 4px;
-  font-size: 1em;
+  font-size: 1.25em;
   padding: 5px;
   line-height: 2em;
-  height: calc(2em + 10px);
-  width: 2em;
+  width: 40px;
+  height: 40px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
 }
 
@@ -135,11 +136,15 @@
   background-color: rgba(251, 190, 53, 0.2);
 }
 
-.t3n__content-cache-debug-list {
+.t3n__content-cache-debug-modal h4 {
+  margin: 0;
+}
+
+.t3n__content-cache-debug-modal {
   position: fixed;
   top: 10px;
   right: 10px;
-  bottom: 10px;
+  bottom: 55px;
   left: 10px;
   z-index: 10002;
   background: rgba(255, 255, 255);
@@ -153,14 +158,19 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-.t3n__content-cache-debug-list .cache-meta {
+.t3n__content-cache-debug-modal .debug-meta {
   display: flex;
+  margin: 20px 0;
 }
-.t3n__content-cache-debug-list .cache-meta div {
+.t3n__content-cache-debug-modal .debug-meta p {
+  color: #2a2a2a;
+  font-size: 16px;
+}
+.t3n__content-cache-debug-modal .debug-meta div {
   margin-right: 20px;
 }
 
-.t3n__content-cache-debug-list > div {
+.t3n__content-cache-debug-modal > div {
   margin-bottom: 5px;
   padding: 0 5px;
   cursor: pointer;
@@ -183,6 +193,7 @@
 .t3n__debug-info-table {
   color: #2a2a2a;
   width: 100%;
+  margin-bottom: 40px;
 }
 
 .t3n__debug-info-table span.tag {
@@ -196,11 +207,15 @@
 .t3n__debug-info-table th {
   font-weight: bold;
   font-size: 16px;
+  padding: 10px 5px;
 }
 .t3n__debug-info-table tr {
   font-size: 13px;
   margin-bottom: 5px;
   border-bottom: 1px solid #a2a2a2;
+}
+.t3n__debug-info-table tr:last-child {
+  border-bottom: none;
 }
 .t3n__debug-info-table td.cached {
   background-color: rgba(52, 232, 143, 0.4);
@@ -211,17 +226,22 @@
 .t3n__debug-info-table td.dynamic {
   background-color: rgba(251, 190, 53, 0.4);
 }
-.t3n__debug-info-table tr.cache-details {
+.t3n__debug-info-table tr.detail-row {
   display: none;
 }
-.t3n__debug-info-table tr.cache-details .t3n__content-cache-debug-table th,
-.t3n__debug-info-table tr.cache-details .t3n__content-cache-debug-table td {
+.t3n__debug-info-table p.small {
+  font-size: 12px;
+}
+.t3n__debug-info-table tr.detail-row .t3n__content-cache-debug-table th,
+.t3n__debug-info-table tr.detail-row .t3n__content-cache-debug-table td {
   font-size: 13px;
 }
-.t3n__debug-info-table tr.cache-details .t3n__content-cache-debug-table {
+.t3n__debug-info-table tr.detail-row .t3n__content-cache-debug-table {
   position: relative;
+  width: 100%;
+  box-shadow: none;
 }
-.t3n__debug-info-table tr.cache-details.-show {
+.t3n__debug-info-table tr.detail-row.-show {
   display: table-row;
 }
 .t3n__debug-info-table td {
@@ -243,26 +263,26 @@
   display: block;
 }
 
-.t3n__content-cache-debug-list > div.cached {
+.t3n__content-cache-debug-modal > div.cached {
   background: rgba(52, 232, 143, 0.4);
 }
 
-.t3n__content-cache-debug-list > div.uncached {
+.t3n__content-cache-debug-modal > div.uncached {
   background: rgba(255, 0, 0, 0.4);
 }
 
-.t3n__content-cache-debug-list > div.dynamic {
+.t3n__content-cache-debug-modal > div.dynamic {
   background: rgba(251, 190, 53, 0.4);
 }
 
-.t3n__content-cache-debug-list > div i {
+.t3n__content-cache-debug-modal > div i {
   font-style: normal;
   font-weight: bold;
   color: darkgrey;
   padding: 0 5px;
 }
 
-.t3n__content-cache-debug-list > div span {
+.t3n__content-cache-debug-modal > div span {
   font-weight: bold;
   color: rgb(50, 50, 50);
   padding: 0 0 0 3px;
