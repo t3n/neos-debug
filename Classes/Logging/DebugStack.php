@@ -14,8 +14,8 @@ namespace t3n\Neos\Debug\Logging;
  * source code.
  */
 
-use \Neos\Flow\Annotations as Flow;
 use Doctrine\DBAL\Logging\SQLLogger;
+use Neos\Flow\Annotations as Flow;
 
 class DebugStack implements SQLLogger
 {
@@ -44,6 +44,9 @@ class DebugStack implements SQLLogger
      */
     protected $startTime = 0;
 
+    /**
+     * @var mixed[]
+     */
     public $slowQueries = [];
 
     /**
