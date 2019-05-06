@@ -1,0 +1,19 @@
+{
+  "name": "t3n-neos-debug-e2e",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "cy": "cypress run",
+    "cy:open": "cypress open"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cypress": "^3.2.0",
+    "cypress-testing-library": "^2.4.0",
+    "eslint": "^5.16.0",
+    "eslint-config-cypress": "^0.28.0",
+    "typescript": "^3.4.3"
+  }
+}
