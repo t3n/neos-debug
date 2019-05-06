@@ -83,7 +83,11 @@ jobs:
           MYSQL_ROOT_PASSWORD: some-password
     steps:
       - attach_workspace: *attach_workspace
-      - restore_cache: *restore_js_packages
+      - restore_cache:
+            keys:
+            - js-packages-v1-{{ .Branch }}-{{ checksum "neos-debug/e2e/package-lock.json" }}
+            - js-packages-v1-{{ .Branch }}-
+            - js-packages-v1-
 
       - run: |
           ./flow flow:cache:flush

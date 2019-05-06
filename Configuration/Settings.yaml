@@ -1,7 +1,7 @@
 t3n:
   Neos:
     Debug:
-      enabled: true
+      enabled: false
       sql:
         # Set when a query should be considered as slow query. In ms
         slowQueryAfter: 10
