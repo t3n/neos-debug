@@ -2,7 +2,7 @@
 /// <reference types="Cypress-testing-library" />
 
 describe('debug console can be used at all', () => {
-  it('conosle can be opened and closed', () => {
+  it('console can be opened and closed', () => {
     // the console is not there yet+
     cy.visit('/')
       .queryByText(/render time/i)
@@ -23,23 +23,20 @@ describe('debug console can be used at all', () => {
       .should('not.exist');
   });
 
-  it('cookie can be set so console stays on a refresn', () => {
+  it.only('cookie can be set so console stays on a refresh', () => {
     cy.visit('/')
       .queryByText(/render time/i)
       .should('not.exist');
 
     // bring up the console
-    cy.window()
-      .should('have.property', '__enable_neos_debug__')
-      .then(debugStartupScript => debugStartupScript(true));
-
-    cy.queryByText(/download/i)
-      .click()
+    cy.openConsole(true)
       .queryByText(/render time/i)
       .should('exist')
       .getCookie('__neos_debug__')
       .should('have.property', 'value')
-      .should('eq', 'true');
+      .should('eq', 'true')
+      .queryByText(/render time/i)
+      .should('exist');
   });
 
   it('debug console opens when the cookie is set', () => {
