@@ -16,16 +16,16 @@ aliases:
       - composer-cache-v1-
 
   - &save_js_packages
-    key: js-packages-v1-{{ .Branch }}-{{ checksum "neos-debug/e2e/package-lock.json" }}
+    key: js-packages-v2-{{ .Branch }}-{{ checksum "neos-debug/e2e/package-lock.json" }}
     paths:
       - /root/.npm
-      - /root/.cache/Cypress/
+      - /root/.cache/Cypress
 
   - &restore_js_packages
     keys:
-      - js-packages-v1-{{ .Branch }}-{{ checksum "e2e/package-lock.json" }}
-      - js-packages-v1-{{ .Branch }}-
-      - js-packages-v1-
+      - js-packages-v2-{{ .Branch }}-{{ checksum "e2e/package-lock.json" }}
+      - js-packages-v2-{{ .Branch }}-
+      - js-packages-v2-
 
   - &attach_workspace
      at: *workspace_root
