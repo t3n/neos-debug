@@ -32,7 +32,7 @@ To get the debugger running you now need to include some javascript and css to a
 ## Usage
 
 To enable the cache visualization open your browsers developer console and execute
-`__enable_neos_debug__()`. This will bring up the debug console at the bottom of your screen with these add three new buttons.
+`__enable_neos_debug__()`. This will bring up the debug console at the bottom of your screen.
 
 ### 🔦 Inspect
 
