@@ -400,7 +400,7 @@ window.__enable_neos_debug__ = (setCookie = false) => {
     .forEach(c => {
       const p = c.split('=');
       if (p[0] === '__neos_debug__' && p[1] === 'true') {
-        window.onload = window.__enable_neos_debug__;
+        window.addEventListener('load', __enable_neos_debug__);
       }
     });
 })();
