@@ -39,7 +39,7 @@ class DebugStack implements SQLLogger
      */
     public $executionTime = 0.0;
 
-    /**
+    /**DebugStack_Original
      * @var float
      */
     protected $startTime = 0;
@@ -95,6 +95,12 @@ class DebugStack implements SQLLogger
         $sql = strtolower($sql);
         $start = strpos($sql, 'from ') + 5;
         $end = strpos($sql, ' ', $start);
-        return substr($sql, $start, $end - $start);
+        $tableName = substr($sql, $start, $end - $start);
+
+        if ($tableName === false) {
+            return '';
+        }
+
+        return $tableName;
     }
 }
