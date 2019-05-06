@@ -15,6 +15,17 @@ aliases:
       - composer-cache-v1-{{ .Branch }}-
       - composer-cache-v1-
 
+  - &save_js_packages
+    key: js-packages-v1-{{ .Branch }}-{{ checksum "neos-debug/e2e/package-lock.json" }}
+    paths:
+      - /root/.npm
+
+  - &restore_js_packages
+    keys:
+      - js-packages-v1-{{ .Branch }}-{{ checksum "e2e/package-lock.json" }}
+      - js-packages-v1-{{ .Branch }}-
+      - js-packages-v1-
+
   - &attach_workspace
      at: *workspace_root
 
@@ -32,6 +43,7 @@ jobs:
     steps:
       - checkout
       - restore_cache: *restore_composer_cache
+      - restore_cache: *restore_js_packages
 
       - run: |
           mkdir neos-debug
@@ -41,7 +53,13 @@ jobs:
           cp neos-debug/composer.json.ci composer.json
           cp neos-debug/phpcs.xml.dist phpcs.xml.dist
           composer update
+          mkdir -p Configuration
+          cp neos-debug/e2e/Settings.yaml Configuration/Settings.yaml
+
+      - run: cd neos-debug/e2e && npm ci
+
       - save_cache: *save_composer_cache
+      - save_cache: *save_js_packages
       - persist_to_workspace: *persist_to_workspace
 
   lint:
@@ -52,11 +70,51 @@ jobs:
       - attach_workspace: *attach_workspace
       - run: bin/phpcs neos-debug/Classes
 
+  e2e:
+    working_directory: *workspace_root
+    environment:
+      FLOW_CONTEXT: Production
+    docker:
+      - image: quay.io/yeebase/ci-build:7.2
+      - image: circleci/mariadb:10.2
+        environment:
+          MYSQL_DATABASE: neos-debug
+          MYSQL_ROOT_PASSWORD: some-password
+    steps:
+      - attach_workspace: *attach_workspace
+
+      - run: |
+          ./flow flow:cache:flush
+          ./flow flow:cache:warmup
+          ./flow doctrine:migrate
+          ./flow resource:publish
+          ./flow site:import --package-key Neos.Demo
+      - run:
+          name: Start flow server
+          command: ./flow server:run --port 8081
+          background: true
+      - run: cd neos-debug/e2e && npm run cy
+
+      - save_cache:
+          key: js-cypress-{{ checksum "e2e/package-lock.json" }}
+          paths:
+            - e2e
+
+      - store_artifacts:
+          path: neos-debug/e2e/cypress/videos
+      - store_artifacts:
+          path: neos-debug/e2e/cypress/screenshots
+      - store_artifacts:
+          path: Data/Logs
+
 workflows:
   version: 2
   build_and_test:
     jobs:
       - checkout
       - lint:
+          requires:
+            - checkout
+      - e2e:
           requires:
             - checkout

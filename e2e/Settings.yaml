@@ -1,0 +1,10 @@
+Neos:
+  Flow:
+    persistence:
+      backendOptions:
+        driver: 'pdo_mysql'
+        dbname: 'neos-debug'
+        password: 'some-password'
+        user: root
+        host: 127.0.0.1
+
