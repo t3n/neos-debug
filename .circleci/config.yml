@@ -19,6 +19,7 @@ aliases:
     key: js-packages-v1-{{ .Branch }}-{{ checksum "neos-debug/e2e/package-lock.json" }}
     paths:
       - /root/.npm
+      - /root/.cache/Cypress/
 
   - &restore_js_packages
     keys:
@@ -82,6 +83,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: some-password
     steps:
       - attach_workspace: *attach_workspace
+      - restore_cache: *restore_js_packages
 
       - run: |
           ./flow flow:cache:flush

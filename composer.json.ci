@@ -6,9 +6,10 @@
     "bin-dir": "bin"
   },
   "require": {
-    "neos/flow": "~5.2.0",
-    "neos/buildessentials": "~5.2.0",
-    "t3n/flow-healthstatus": "@dev",
+    "neos/neos": "~4.3.0",
+    "neos/demo": "^5.0",
+    "neos/buildessentials": "~5.3.0",
+    "t3n/neos-debug": "@dev",
     "t3n/coding-standard": "~1.0.0"
   },
   "require-dev": {
