@@ -85,9 +85,9 @@ jobs:
       - attach_workspace: *attach_workspace
       - restore_cache:
             keys:
-            - js-packages-v1-{{ .Branch }}-{{ checksum "neos-debug/e2e/package-lock.json" }}
-            - js-packages-v1-{{ .Branch }}-
-            - js-packages-v1-
+            - js-packages-v2-{{ .Branch }}-{{ checksum "neos-debug/e2e/package-lock.json" }}
+            - js-packages-v2-{{ .Branch }}-
+            - js-packages-v2-
 
       - run: |
           ./flow flow:cache:flush
