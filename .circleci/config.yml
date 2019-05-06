@@ -101,11 +101,6 @@ jobs:
           background: true
       - run: cd neos-debug/e2e && npm run cy
 
-      - save_cache:
-          key: js-cypress-{{ checksum "e2e/package-lock.json" }}
-          paths:
-            - e2e
-
       - store_artifacts:
           path: neos-debug/e2e/cypress/videos
       - store_artifacts:

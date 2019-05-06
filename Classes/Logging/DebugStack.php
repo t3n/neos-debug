@@ -39,7 +39,7 @@ class DebugStack implements SQLLogger
      */
     public $executionTime = 0.0;
 
-    /**DebugStack_Original
+    /**
      * @var float
      */
     protected $startTime = 0;
