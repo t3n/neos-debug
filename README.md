@@ -23,6 +23,11 @@ t3n:
       enabled: true
 ```
 
+To bring up the debug panel run this command in your js console:
+```js
+__enable_neos_debug__()
+```
+
 _Disclaimer: Once the debug mode is enabled you might expose sensitive data. Make sure to **not** use this in production. At least be warned_
 
 In a previous version of this package your current user needed a specific role as well. We dropped this requirement for now as you could not use this package if you don't have a frontend login on your site. Once the package is active it will render some metadata in your html output.
