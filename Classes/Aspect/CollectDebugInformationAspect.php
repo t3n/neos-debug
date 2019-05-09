@@ -17,7 +17,6 @@ namespace t3n\Neos\Debug\Aspect;
 use Doctrine\ORM\EntityManagerInterface;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Aop\JoinPointInterface;
-use Neos\Flow\Log\PsrSystemLoggerInterface;
 use t3n\Neos\Debug\Logging\DebugStack;
 
 /**
