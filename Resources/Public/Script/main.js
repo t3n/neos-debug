@@ -28,8 +28,11 @@ window.__enable_neos_debug__ = (setCookie = false) => {
 
   // parse debug values
   const debugValuesWalker = document.createTreeWalker(document.getRootNode(), NodeFilter.SHOW_COMMENT, node => (node.nodeValue.indexOf(DEBUG_PREFIX) === 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP), false);
-  const debugData = null;
-  const debugInfos = JSON.parse(debugValuesWalker.nextNode().nodeValue.substring(DEBUG_PREFIX.length));
+  const dataNode = debugValuesWalker.nextNode();
+  let debugInfos = [];
+  if (dataNode) {
+    debugInfos = JSON.parse(dataNode.nodeValue.substring(DEBUG_PREFIX.length));
+  }
 
   const infoElements = [];
   const createInfoElement = ({ parentNode, cacheInfo, index }) => {
@@ -163,8 +166,10 @@ window.__enable_neos_debug__ = (setCookie = false) => {
     const cacheInfo = JSON.parse(node.nodeValue.substring(PREFIX.length));
     const parentNode = node.previousElementSibling;
 
-    // build up
-    createInfoElement({ parentNode, cacheInfo, index });
+    if (parentNode) {
+      // build up
+      createInfoElement({ parentNode, cacheInfo, index });
+    }
   });
 
   // sort info elements by fusion path
@@ -315,10 +320,12 @@ window.__enable_neos_debug__ = (setCookie = false) => {
   const shelf = document.createElement('div');
   shelf.classList.add('t3n__content-cache-debug-shelf');
 
-  const parseTime = document.createElement('div');
-  parseTime.innerText = debugInfos.renderTime + ' ms render time';
+  if (debugInfos.renderTime) {
+    const parseTime = document.createElement('div');
+    parseTime.innerText = debugInfos.renderTime + ' ms render time';
 
-  shelf.appendChild(parseTime);
+    shelf.appendChild(parseTime);
+  }
 
   const infoButton = document.createElement('span');
   infoButton.innerText = '🔦 Inspect';
@@ -349,21 +356,27 @@ window.__enable_neos_debug__ = (setCookie = false) => {
 
   shelf.appendChild(infoButton);
 
-  const sql = document.createElement('span');
-  sql.innerText = `🗄 SQL (${debugInfos.sqlData.queryCount} queries, ${debugInfos.sqlData.slowQueries.length} are slow)`;
-  sql.addEventListener('click', () => {
-    if (sqlInfosVisible) {
-      sqlTable.hide();
-    } else {
-      sqlTable.show();
-    }
-    sql.classList.toggle('-active');
-    sqlInfosVisible = !sqlInfosVisible;
-  });
-  shelf.appendChild(sql);
+  if (debugInfos.sqlData) {
+    const sql = document.createElement('span');
+    sql.innerText = `🗄 SQL (${debugInfos.sqlData.queryCount} queries, ${debugInfos.sqlData.slowQueries.length} are slow)`;
+    sql.addEventListener('click', () => {
+      if (sqlInfosVisible) {
+        sqlTable.hide();
+      } else {
+        sqlTable.show();
+      }
+      sql.classList.toggle('-active');
+      sqlInfosVisible = !sqlInfosVisible;
+    });
+    shelf.appendChild(sql);
+  }
 
   const listButton = document.createElement('span');
-  listButton.innerText = `⚡️ Cache (hits: ${debugInfos.cCacheHits}, misses: ${debugInfos.cCacheMisses})`;
+  if (debugInfos.cCacheHits || debugInfos.cCacheMisses) {
+    listButton.innerText = `⚡️ Cache (hits: ${debugInfos.cCacheHits}, misses: ${debugInfos.cCacheMisses})`;
+  } else {
+    listButton.innerText = '️⚡️Cache';
+  }
   listButton.addEventListener('click', () => {
     if (listVisible) {
       cacheTable.hide();
