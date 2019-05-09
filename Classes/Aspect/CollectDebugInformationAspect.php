@@ -34,13 +34,6 @@ class CollectDebugInformationAspect
     protected $entityManager;
 
     /**
-     * @Flow\Inject()
-     *
-     * @var PsrSystemLoggerInterface
-     */
-    protected $logger;
-
-    /**
      * @var DebugStack
      */
     protected $sqlLoggingStack;
@@ -93,7 +86,7 @@ class CollectDebugInformationAspect
     }
 
     /**
-     * @Flow\Before("method(Neos\Neos\Controller\Frontend\NodeController->showAction()) && t3n\Neos\Debug\Aspect\CollectDebugInformationAspect->debuggingActive")
+     * @Flow\Before("method(Neos\Flow\Mvc\Routing\Router->route()) && t3n\Neos\Debug\Aspect\CollectDebugInformationAspect->debuggingActive")
      */
     public function startSqlLogging(\Neos\Flow\AOP\JoinPointInterface $joinPoint): void
     {
