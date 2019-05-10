@@ -82,7 +82,7 @@ class CollectDebugInformationAspect
         $debugOutput = '<!--__T3N_NEOS_DEBUG__ ' . json_encode($data) . '-->';
         $htmlEndPosition = strpos($output, '</html>');
 
-        if ($htmlEndPosition === false ) {
+        if ($htmlEndPosition === false) {
             return $output . $debugOutput;
         }
 
