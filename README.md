@@ -4,6 +4,8 @@
 
 The t3n.Neos.Debug package is a small helper package to add a debug panel to your Neos CMS website. At this point in time you're able to debug your content cache configuration as well as sql queries.
 
+_Note: This is still a very early rough version. Contributions are welcome in any Error. Nevertheless, it's already adding value to your debug experience_
+
 ![Neos CMS Demo Site with enabled debug console](t3n-neos-debug.jpg 'Neos CMS Demo Site with enabled debug console')
 
 ## Installation & configuration
