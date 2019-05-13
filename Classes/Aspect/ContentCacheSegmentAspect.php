@@ -155,9 +155,10 @@ class ContentCacheSegmentAspect
     }
 
     /**
+     * @param mixed $segment This is mixed as the RuntimeContentCache might also return none string values
      * @param mixed[] $info
      */
-    protected function renderCacheInfoIntoSegment(string $segment, array $info): string
+    protected function renderCacheInfoIntoSegment($segment, array $info): string
     {
         $injectPosition = 2;
         $info = array_slice($info, 0, $injectPosition, true)
@@ -166,11 +167,17 @@ class ContentCacheSegmentAspect
 
         $info['created'] = (new \DateTime())->format('d.m.Y H:i:s');
 
+        $cCacheDebugData = '<!--__T3N_CONTENT_CACHE_DEBUG__ ' . json_encode($info) . ' -->';
+
+        if (! is_string($segment)) {
+            return $cCacheDebugData;
+        }
+
         if ($info['mode'] === self::MODE_UNCACHED && strpos($segment, $this->cacheSegmentTail) === false) {
             // on a second page load, when outer caches are created, the uncached will be evaluated via
             // RuntimeContentCache->evaluateUncached() which won't add the cache marker. So we can just append
             // the meta data
-            return $segment . '<!--__T3N_CONTENT_CACHE_DEBUG__ ' . json_encode($info) . ' -->';
+            return $segment . $cCacheDebugData;
         }
 
         $segmentHead = substr($segment, 0, strlen($segment) - strlen($this->cacheSegmentTail));
@@ -183,6 +190,6 @@ class ContentCacheSegmentAspect
             $segmentHead = substr($segmentHead, 0, $htmlEndPosition);
         }
 
-        return $segmentHead . '<!--__T3N_CONTENT_CACHE_DEBUG__ ' . json_encode($info) . ' -->' . $segmentEnd;
+        return $segmentHead . $cCacheDebugData . $segmentEnd;
     }
 }
