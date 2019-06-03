@@ -1,5 +1,5 @@
 // <reference types="Cypress" />
 // <reference types="Cypress-testing-library" />
 
-import 'cypress-testing-library/add-commands';
+import '@testing-library/cypress/add-commands';
 import './commands';
