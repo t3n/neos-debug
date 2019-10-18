@@ -23,7 +23,7 @@ describe('debug console can be used at all', () => {
       .should('not.exist');
   });
 
-  it.only('cookie can be set so console stays on a refresh', () => {
+  it('cookie can be set so console stays on a refresh', () => {
     cy.visit('/')
       .queryByText(/render time/i)
       .should('not.exist');
