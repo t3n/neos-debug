@@ -65,7 +65,7 @@ class CollectDebugInformationAspect
         $endRenderAt = microtime(true) * 1000;
         $output = $joinPoint->getAdviceChain()->proceed($joinPoint);
 
-        if (is_a($output, '\GuzzleHttp\Psr7\Response')) {
+        if ($output instanceof \GuzzleHttp\Psr7\Response) {
             $output = $output->getBody()->getContents();
         }
 
