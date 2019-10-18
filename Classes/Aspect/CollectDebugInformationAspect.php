@@ -62,8 +62,12 @@ class CollectDebugInformationAspect
     public function addDebugValues(JoinPointInterface $joinPoint): string
     {
         $startRenderAt = microtime(true) * 1000;
-        $output = $joinPoint->getAdviceChain()->proceed($joinPoint);
         $endRenderAt = microtime(true) * 1000;
+        $output = $joinPoint->getAdviceChain()->proceed($joinPoint);
+
+        if (is_a($output, '\GuzzleHttp\Psr7\Response')) {
+            $output = $output->getBody()->getContents();
+        }
 
         $data = [
             'startRenderAt' => $startRenderAt,
