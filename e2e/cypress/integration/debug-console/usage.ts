@@ -25,24 +25,23 @@ describe("debug console can be used at all", () => {
 
   it.only("cookie can be set so console stays on a refresh", () => {
     cy.visit("/")
-      .queryByText(/inspect/i)
+      .queryByText(/cache \(/i)
       .should("not.exist");
 
     // bring up the console
     cy.openConsole(true)
-      .queryByText(/inspect/i)
+      .queryByText(/cache \(/i)
       .should("exist")
       .getCookie("__neos_debug__")
       .should("have.property", "value")
-      .should("eq", "true")
-      .queryByText(/inspect/i)
-      .should("exist");
+      .should("eq", "true");
   });
 
   it("debug console opens when the cookie is set", () => {
     cy.setCookie("__neos_debug__", "true")
       .visit("/")
-      .queryByText(/inspect/i);
+      .queryByText(/cache \(/i)
+      .should("exist");
   });
 
   it("closing the console will also delete the cooke", () => {
