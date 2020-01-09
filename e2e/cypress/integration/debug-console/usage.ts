@@ -5,12 +5,12 @@ describe("debug console can be used at all", () => {
   it("console can be opened and closed", () => {
     // the console is not there yet+
     cy.visit("/")
-      .queryByText(/render time/i)
+      .queryByText(/cache \(/i)
       .should("not.exist");
 
     // bring up the console
     cy.openConsole()
-      .queryByText(/render time/i)
+      .queryByText(/cache \(/i)
       .should("exist")
       .queryByText(/close/i)
       .should("exist");
@@ -19,11 +19,11 @@ describe("debug console can be used at all", () => {
     cy.window()
       .queryByText(/close/i)
       .click()
-      .queryByText(/render time/i)
+      .queryByText(/cache \(/i)
       .should("not.exist");
   });
 
-  it.only("cookie can be set so console stays on a refresh", () => {
+  it("cookie can be set so console stays on a refresh", () => {
     cy.visit("/")
       .queryByText(/cache \(/i)
       .should("not.exist");
