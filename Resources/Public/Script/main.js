@@ -4,7 +4,7 @@ window.__enable_neos_debug__ = (setCookie = false) => {
   }
 
   if (setCookie) {
-    document.cookie = '__neos_debug__=true';
+    document.cookie = '__neos_debug__=true;path=/';
   }
 
   console.log('%c Starting Neos Debug Tool ... ', 'color: white; background: #f9423a; line-height: 20px; font-weight: bold');
@@ -397,7 +397,7 @@ window.__enable_neos_debug__ = (setCookie = false) => {
     infoVisible && infoElements.forEach(e => e.hide());
     listVisible && cacheTable.hide();
     window.__enable_neos_debug__.active = false;
-    document.cookie = '__neos_debug__=; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+    document.cookie = '__neos_debug__=; expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
     console.log('%c Closing Neos Debug Tool> ', 'color: white; background: #f9423a; line-height: 20px; font-weight: bold');
   });
 
