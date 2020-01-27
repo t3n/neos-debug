@@ -1,0 +1,10 @@
+version: 1
+update_configs:
+  - package_manager: "php:composer"
+    directory: "/"
+    update_schedule: "weekly"
+    target_branch: "master"
+  - package_manager: "javascript"
+    directory: "/e2e"
+    update_schedule: "weekly"
+    target_branch: "master"
