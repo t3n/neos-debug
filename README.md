@@ -13,7 +13,7 @@ _Note: This is still a very early rough version. Contributions are welcome in an
 Install the package via composer
 
 ```
-composer require t3n/neos-debug
+composer require t3n/neos-debug --dev
 ```
 
 The debug mode is disabled by default. To enable it add this to your Settings.yaml
