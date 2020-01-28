@@ -1,7 +1,7 @@
 version: 2.1
 
 aliases:
-  - &ci-build-image quay.io/yeebase/ci-build:7.2
+  - &ci-build-image quay.io/yeebase/ci-build:7.3
   - &workspace_root ~/workspace
 
   - &save_composer_cache
@@ -28,7 +28,7 @@ aliases:
       - js-packages-v2-
 
   - &attach_workspace
-     at: *workspace_root
+    at: *workspace_root
 
   - &persist_to_workspace
     root: .
@@ -76,7 +76,7 @@ jobs:
     environment:
       FLOW_CONTEXT: Production
     docker:
-      - image: quay.io/yeebase/ci-build:7.2
+      - image: *ci-build-image
       - image: circleci/mariadb:10.2
         environment:
           MYSQL_DATABASE: neos-debug
@@ -84,7 +84,7 @@ jobs:
     steps:
       - attach_workspace: *attach_workspace
       - restore_cache:
-            keys:
+          keys:
             - js-packages-v2-{{ .Branch }}-{{ checksum "neos-debug/e2e/package-lock.json" }}
             - js-packages-v2-{{ .Branch }}-
             - js-packages-v2-
@@ -112,7 +112,27 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - checkout
+      - checkout:
+          filters:
+            branches:
+              ignore: /dependabot.*/
+      - lint:
+          requires:
+            - checkout
+      - e2e:
+          requires:
+            - checkout
+
+  build_and_test_dependabot:
+    jobs:
+      - hold:
+          type: approval
+          filters:
+            branches:
+              only: /dependabot.*/
+      - checkout:
+          requires:
+            - hold
       - lint:
           requires:
             - checkout
