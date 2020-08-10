@@ -18,6 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Aop\JoinPointInterface;
 use t3n\Neos\Debug\Logging\DebugStack;
+use t3n\Neos\Debug\Service\DebugService;
 
 /**
  * @Flow\Scope("singleton")
@@ -31,6 +32,12 @@ class CollectDebugInformationAspect
      * @var EntityManagerInterface
      */
     protected $entityManager;
+
+    /**
+     * @Flow\Inject
+     * @var DebugService
+     */
+    protected $debugService;
 
     /**
      * @var DebugStack
@@ -48,6 +55,18 @@ class CollectDebugInformationAspect
     protected $contentCacheMisses = 0;
 
     /**
+     * @Flow\InjectConfiguration(package="t3n.Neos.Debug", path="serverTimingHeader.enabled")
+     * @var bool
+     */
+    protected $serverTimingHeaderEnabled;
+
+    /**
+     * @Flow\InjectConfiguration(package="t3n.Neos.Debug", path="htmlOutput.enabled")
+     * @var bool
+     */
+    protected $htmlOutputEnabled;
+
+    /**
      * @Flow\Pointcut("setting(t3n.Neos.Debug.enabled)")
      */
     public function debuggingActive(): void
@@ -62,26 +81,43 @@ class CollectDebugInformationAspect
     public function addDebugValues(JoinPointInterface $joinPoint): string
     {
         $startRenderAt = microtime(true) * 1000;
-        $endRenderAt = microtime(true) * 1000;
         $output = $joinPoint->getAdviceChain()->proceed($joinPoint);
+        $endRenderAt = microtime(true) * 1000;
 
-        if ($output instanceof \GuzzleHttp\Psr7\Response) {
-            $output = $output->getBody()->getContents();
+        $renderTime = round($endRenderAt - $startRenderAt, 2);
+        $sqlExecutionTime = round($this->sqlLoggingStack->executionTime, 2);
+
+        if ($this->serverTimingHeaderEnabled) {
+            $this->debugService->addMetric('fusionRenderTime', $renderTime, 'Fusion rendering');
+            $this->debugService->addMetric('sqlExecutionTime', $sqlExecutionTime, 'Combined SQL execution');
+            if ($this->contentCacheMisses === 0) {
+                $this->debugService->addMetric('contentCacheHit', null, 'Content cache hit');
+            } else {
+                $this->debugService->addMetric('contentCacheMiss', null, 'Content cache miss');
+            }
         }
 
         $data = [
             'startRenderAt' => $startRenderAt,
             'endRenderAt' => $endRenderAt,
-            'renderTime' => round($endRenderAt - $startRenderAt, 2),
+            'renderTime' => $renderTime,
             'sqlData' => [
                 'queryCount' => $this->sqlLoggingStack->queryCount,
-                'executionTime' => round($this->sqlLoggingStack->executionTime, 2),
+                'executionTime' => $sqlExecutionTime,
                 'tables' => $this->sqlLoggingStack->tables,
                 'slowQueries' => $this->sqlLoggingStack->slowQueries,
             ],
             'cCacheHits' => $this->contentCacheHits,
             'cCacheMisses' => $this->contentCacheMisses,
         ];
+
+        if ($output instanceof \GuzzleHttp\Psr7\Response) {
+            $output = $output->getBody()->getContents();
+        }
+
+        if (!$this->htmlOutputEnabled) {
+            return $output;
+        }
 
         $debugOutput = '<!--__T3N_NEOS_DEBUG__ ' . json_encode($data) . '-->';
         $htmlEndPosition = strpos($output, '</html>');
