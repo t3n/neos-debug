@@ -43,9 +43,9 @@ class CollectDebugInformationAspect
     protected $contentCacheHits = 0;
 
     /**
-     * @var int
+     * @var array
      */
-    protected $contentCacheMisses = 0;
+    protected $contentCacheMisses = [];
 
     /**
      * @Flow\Pointcut("setting(t3n.Neos.Debug.enabled)")
@@ -103,14 +103,17 @@ class CollectDebugInformationAspect
     }
 
     /**
-     * @Flow\AfterReturning("method(Neos\Fusion\Core\Cache\ContentCache->getCachedSegment()) && t3n\Neos\Debug\Aspect\CollectDebugInformationAspect->debuggingActive")
+     * @Flow\Around("method(Neos\Fusion\Core\Cache\ContentCache->getCachedSegment()) && t3n\Neos\Debug\Aspect\CollectDebugInformationAspect->debuggingActive")
      */
-    public function addCacheMiss(\Neos\Flow\AOP\JoinPointInterface $joinPoint): void
+    public function addCacheMiss(\Neos\Flow\AOP\JoinPointInterface $joinPoint)
     {
-        $result = $joinPoint->getResult();
+        $fusionPath = $joinPoint->getMethodArgument('fusionPath');
+
+        $result = $joinPoint->getAdviceChain()->proceed($joinPoint);
         if ($result === false) {
-            $this->contentCacheMisses++;
+            $this->contentCacheMisses[]= $fusionPath;
         }
+        return $result;
     }
 
     /**

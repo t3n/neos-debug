@@ -29,13 +29,18 @@ window.__enable_neos_debug__ = (setCookie = false) => {
   // parse debug values
   const debugValuesWalker = document.createTreeWalker(document.getRootNode(), NodeFilter.SHOW_COMMENT, node => (node.nodeValue.indexOf(DEBUG_PREFIX) === 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP), false);
   const dataNode = debugValuesWalker.nextNode();
-  let debugInfos = [];
+  let debugInfos = {};
   if (dataNode) {
     debugInfos = JSON.parse(dataNode.nodeValue.substring(DEBUG_PREFIX.length));
   }
+  debugInfos.cCacheUncached = 0;
 
   const infoElements = [];
   const createInfoElement = ({ parentNode, cacheInfo, index }) => {
+    if (cacheInfo.mode === 'uncached') {
+        debugInfos.cCacheUncached++;
+    }
+
     const container = document.createElement('div');
     container.classList.add('t3n__content-cache-debug-container');
 
@@ -255,14 +260,14 @@ window.__enable_neos_debug__ = (setCookie = false) => {
     container.classList.add('t3n__content-cache-debug-modal');
 
     const cacheLegend = document.createElement('div');
-    cacheLegend.innerHTML = `<h3>Cache Information</h3><div class="debug-meta"><div><p>Hits: ${debugInfos.cCacheHits}</p></div><div><p>Misses: ${debugInfos.cCacheMisses}</p></div></div>`;
+    cacheLegend.innerHTML = `<h3>Cache Information</h3><div class="debug-meta"><div><p>Hits: ${debugInfos.cCacheHits}</p></div><div><p>Misses: ${debugInfos.cCacheMisses.length}</p></div><div><p>Uncached: ${debugInfos.cCacheUncached}</p></div></div>`;
     container.appendChild(cacheLegend);
 
     const infoTable = document.createElement('table');
     infoTable.classList.add('t3n__debug-info-table');
 
     const headRow = document.createElement('tr');
-    headRow.innerHTML = '<th>Mode</th><th>Fusion path</th><th>';
+    headRow.innerHTML = '<th>Mode</th><th>Cache hit</th><th>Fusion path</th><th>';
     infoTable.appendChild(headRow);
 
     infoElements.forEach(({ cacheInfo, table, show }) => {
@@ -270,7 +275,7 @@ window.__enable_neos_debug__ = (setCookie = false) => {
       detailRow.classList.add('detail-row');
 
       const detailCell = document.createElement('td');
-      detailCell.setAttribute('colspan', 3);
+      detailCell.setAttribute('colspan', 4);
 
       // we clone the node so the inspect button won't trigger the remove on this table
       detailCell.appendChild(table.cloneNode(true));
@@ -279,7 +284,11 @@ window.__enable_neos_debug__ = (setCookie = false) => {
 
       const row = document.createElement('tr');
       const fusionPath = cacheInfo.fusionPath.replace(/\//g, '<i>/</i>').replace(/<([^>\/]{2,})>/g, '<span class="fusion-prototype"><span>$1</span></span>');
-      row.innerHTML = `<td class="${cacheInfo.mode}">${cacheInfo.mode}</td><td>${fusionPath}</td>`;
+      const cacheHit = !debugInfos.cCacheMisses.includes(cacheInfo.fusionPath) && cacheInfo.mode !== 'uncached';
+
+      row.innerHTML = `<td class="${cacheInfo.mode}">${cacheInfo.mode}</td>`;
+      row.innerHTML += `<td class="${cacheHit ? 'cached' : 'uncached'}">${cacheHit ? 'yes' : 'no'}</td>`;
+      row.innerHTML += `<td>${fusionPath}</td>`;
 
       const actions = document.createElement('td');
       const togglePrototype = document.createElement('button');
@@ -373,7 +382,7 @@ window.__enable_neos_debug__ = (setCookie = false) => {
 
   const listButton = document.createElement('span');
   if (debugInfos.cCacheHits || debugInfos.cCacheMisses) {
-    listButton.innerText = `⚡️ Cache (hits: ${debugInfos.cCacheHits}, misses: ${debugInfos.cCacheMisses})`;
+    listButton.innerText = `⚡️ Cache (hits: ${debugInfos.cCacheHits}, misses: ${debugInfos.cCacheMisses.length}, uncached ${debugInfos.cCacheUncached})`;
   } else {
     listButton.innerText = '️⚡️Cache';
   }
