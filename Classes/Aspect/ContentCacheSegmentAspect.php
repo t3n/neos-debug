@@ -20,6 +20,7 @@ use Neos\Flow\Aop\JoinPointInterface;
 use Neos\Fusion\Core\Cache\ContentCache;
 use Neos\Fusion\FusionObjects\AbstractFusionObject;
 use Neos\Utility\ObjectAccess;
+use t3n\Neos\Debug\Service\RenderTimer;
 
 /**
  * @Flow\Scope("singleton")
@@ -46,6 +47,13 @@ class ContentCacheSegmentAspect
      */
     protected $interceptedFusionObject;
 
+    /**
+     * @Flow\Inject
+     *
+     * @var RenderTimer
+     */
+    protected $renderTimer;
+
     public function injectContentCache(ContentCache $contentCache): void
     {
         $randomCacheMarker = ObjectAccess::getProperty($contentCache, 'randomCacheMarker', true);
@@ -65,10 +73,13 @@ class ContentCacheSegmentAspect
     public function wrapCachedSegment(JoinPointInterface $joinPoint): string
     {
         $segment = $joinPoint->getAdviceChain()->proceed($joinPoint);
+        $fusionPath = $joinPoint->getMethodArgument('fusionPath');
+        $renderTime = $this->renderTimer->stop($fusionPath);
 
         return $this->renderCacheInfoIntoSegment($segment, [
             'mode' => static::MODE_CACHED,
-            'fusionPath' => $joinPoint->getMethodArgument('fusionPath'),
+            'fusionPath' => $fusionPath,
+            'renderMetrics' => $renderTime,
             'entryIdentifier' => $this->interceptedCacheEntryValues,
             'entryTags' => $joinPoint->getMethodArgument('tags'),
             'lifetime' => $joinPoint->getMethodArgument('lifetime')
