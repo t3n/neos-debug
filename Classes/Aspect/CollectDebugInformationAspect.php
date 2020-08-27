@@ -35,6 +35,7 @@ class CollectDebugInformationAspect
 
     /**
      * @Flow\Inject
+     *
      * @var DebugService
      */
     protected $debugService;
@@ -56,12 +57,14 @@ class CollectDebugInformationAspect
 
     /**
      * @Flow\InjectConfiguration(package="t3n.Neos.Debug", path="serverTimingHeader.enabled")
+     *
      * @var bool
      */
     protected $serverTimingHeaderEnabled;
 
     /**
      * @Flow\InjectConfiguration(package="t3n.Neos.Debug", path="htmlOutput.enabled")
+     *
      * @var bool
      */
     protected $htmlOutputEnabled;
@@ -115,7 +118,7 @@ class CollectDebugInformationAspect
             $output = $output->getBody()->getContents();
         }
 
-        if (!$this->htmlOutputEnabled) {
+        if (! $this->htmlOutputEnabled) {
             return $output;
         }
 

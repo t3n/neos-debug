@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace t3n\Neos\Debug\Service;
@@ -18,25 +19,36 @@ use Neos\Flow\Annotations as Flow;
 /**
  * @Flow\Scope("singleton")
  */
-class DebugService {
+class DebugService
+{
+    /**
+     * @var int
+     */
     protected $startRequestAt;
+
+    /**
+     * @var int
+     */
     protected $stopRequestAt;
-    protected $sqlLoggingStack;
+
+    /**
+     * @var mixed[]
+     */
     protected $metrics = [];
 
     /**
      * Starts the timer for the request process
      */
-    public function startRequestTimer(): void {
+    public function startRequestTimer(): void
+    {
         $this->startRequestAt = microtime(true) * 1000;
     }
 
     /**
      * Stops the timer for the request process
-     *
-     * @return float
      */
-    public function stopRequestTime(): float {
+    public function stopRequestTime(): float
+    {
         return $this->stopRequestAt = microtime(true) * 1000;
     }
 
@@ -47,7 +59,8 @@ class DebugService {
      * @param float|null $value a numeric float value with up to 2 decimals
      * @param string|null $description the short description for the metric
      */
-    public function addMetric(string $name, $value = null, string $description = null): void {
+    public function addMetric(string $name, ?float $value = null, ?string $description = null): void
+    {
         $this->metrics[$this->cleanString($name)] = [
             'value' => $value,
             'description' => $this->cleanString($description),
@@ -56,22 +69,19 @@ class DebugService {
 
     /**
      * Remove any special characters that might break the header
-     *
-     * @param string $input
-     * @return string
      */
-    protected function cleanString(string $input): string {
-        return preg_replace("/[^A-Za-z0-9 ]/", '', $input);
+    protected function cleanString(string $input): string
+    {
+        return preg_replace('/[^A-Za-z0-9 ]/', '', $input);
     }
 
     /**
      * Returns the time elapsed since `startRequestTime` and will stop the timer
      * if it has not been stopped yet.
-     *
-     * @return float
      */
-    public function getRequestTime(): float {
-        if (!$this->stopRequestAt) {
+    public function getRequestTime(): float
+    {
+        if (! $this->stopRequestAt) {
             $this->stopRequestTime();
         }
         return round($this->stopRequestAt - $this->startRequestAt, 2);
@@ -80,10 +90,11 @@ class DebugService {
     /**
      * Returns the list of stored metrics including the request time
      *
-     * @return array
+     * @return mixed[]
      */
-    public function getMetrics(): array {
-        if (!array_key_exists('processRequest', $this->metrics)) {
+    public function getMetrics(): array
+    {
+        if (! array_key_exists('processRequest', $this->metrics)) {
             $this->addMetric('processRequest', $this->getRequestTime(), 'Process request');
         }
         return $this->metrics;

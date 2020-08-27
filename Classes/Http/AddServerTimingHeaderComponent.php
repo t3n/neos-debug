@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace t3n\Neos\Debug\Http;
@@ -23,15 +24,16 @@ use t3n\Neos\Debug\Service\DebugService;
  */
 class AddServerTimingHeaderComponent implements ComponentInterface
 {
-
     /**
-     * @var boolean
      * @Flow\InjectConfiguration(path="serverTimingHeader.enabled")
+     *
+     * @var bool
      */
     protected $enabled;
 
     /**
      * @Flow\Inject
+     *
      * @var DebugService
      */
     protected $debugService;
@@ -41,7 +43,7 @@ class AddServerTimingHeaderComponent implements ComponentInterface
      */
     public function handle(ComponentContext $componentContext)
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return;
         }
 
