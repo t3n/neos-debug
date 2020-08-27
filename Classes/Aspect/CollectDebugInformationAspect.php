@@ -51,7 +51,7 @@ class CollectDebugInformationAspect
     protected $contentCacheHits = 0;
 
     /**
-     * @var array
+     * @var string[]
      */
     protected $contentCacheMisses = [];
 
@@ -143,6 +143,8 @@ class CollectDebugInformationAspect
 
     /**
      * @Flow\Around("method(Neos\Fusion\Core\Cache\ContentCache->getCachedSegment()) && t3n\Neos\Debug\Aspect\CollectDebugInformationAspect->debuggingActive")
+     *
+     * @phpcs:disable SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
      */
     public function addCacheMiss(\Neos\Flow\AOP\JoinPointInterface $joinPoint)
     {
