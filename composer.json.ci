@@ -11,7 +11,7 @@
     "neos/demo": "^6.1",
     "neos/buildessentials": "^6.1",
     "t3n/neos-debug": "@dev",
-    "t3n/coding-standard": "~1.0.0"
+    "t3n/coding-standard": "~1.1.0"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "~3.5",
