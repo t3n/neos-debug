@@ -27,3 +27,7 @@ Neos:
             t3n.Neos.Debug:AddServerTimingHeader:
               position: 'after setHeader'
               component: 't3n\Neos\Debug\Http\AddServerTimingHeaderComponent'
+
+    reflection:
+      ignoredTags:
+        'phpcsSuppress': true
