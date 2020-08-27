@@ -2,11 +2,15 @@
 
 # t3n.Neos.Debug
 
-The t3n.Neos.Debug package is a small helper package to add a debug panel to your Neos CMS website. At this point in time you're able to debug your content cache configuration as well as sql queries.
+The t3n.Neos.Debug package is a small helper package to add a debug panel to your Neos CMS website. 
+At this point in time you're able to debug your content cache configuration as well as sql queries.
+Additionally, the Server-Timing http header can be enabled that will add request timings to responses. 
+Those then can be viewed in the browser network tab.
 
 _Note: This is still a very early rough version. Contributions are welcome in any Error. Nevertheless, it's already adding value to your debug experience_
 
 ![Neos CMS Demo Site with enabled debug console](t3n-neos-debug.jpg 'Neos CMS Demo Site with enabled debug console')
+![Server-Timing header in the browser network tab](server-timing-example.jpg 'Viewing the timings in the browser network tab')
 
 ## Installation & configuration
 
@@ -35,6 +39,31 @@ _Disclaimer: Once the debug mode is enabled you might expose sensitive data. Mak
 In a previous version of this package your current user needed a specific role as well. We dropped this requirement for now as you could not use this package if you don't have a frontend login on your site. Once the package is active it will render some metadata in your html output.
 
 To get the debugger running you now need to include some javascript and css to acutally render the debug console. This package ships two fusion prototypes to include all resources. If your Document extends `Neos.Neos:Page` you don't need to include anything. We already added the resources to `Neos.Neos:Page` prototype.
+
+### HTTP Server-Timing header   
+
+The header is disabled by default. To enable it add this to your Settings.yaml
+
+```yaml
+t3n:
+  Neos:
+    Debug:
+      serverTimingHeader:
+        enabled: true
+```   
+
+If you only want the header with all timings but not the debug mode, do this:
+
+```yaml
+t3n:
+  Neos:
+    Debug:                                                  
+      enabled: true
+      htmlOutput:
+        enabled: false
+      serverTimingHeader:
+        enabled: true
+```
 
 ## Usage
 

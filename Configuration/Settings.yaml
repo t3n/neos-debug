@@ -2,6 +2,10 @@ t3n:
   Neos:
     Debug:
       enabled: false
+      htmlOutput:
+        enabled: true
+      serverTimingHeader:
+        enabled: false
       sql:
         # Set when a query should be considered as slow query. In ms
         slowQueryAfter: 10
@@ -11,3 +15,15 @@ Neos:
     fusion:
       autoInclude:
         't3n.Neos.Debug': true
+
+  Flow:
+    http:
+      chain:
+        'process':
+          chain:
+            t3n.Neos.Debug:MeasureServerTiming:
+              position: 'start'
+              component: 't3n\Neos\Debug\Http\MeasureServerTimingComponent'
+            t3n.Neos.Debug:AddServerTimingHeader:
+              position: 'after setHeader'
+              component: 't3n\Neos\Debug\Http\AddServerTimingHeaderComponent'
