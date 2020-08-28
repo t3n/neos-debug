@@ -94,19 +94,20 @@ window.__enable_neos_debug__ = (setCookie = false) => {
 
       let arrayValue;
       if (Array.isArray(value)) {
-        arrayValue = value.map((v, i) => `<i>${i}:</i> ${v}`);
+        arrayValue = value.map((v, i) => `<i>${i}:</i> <span>${v}</span>`);
       } else if (typeof value === 'object') {
-        arrayValue = Object.keys(value).map(subKey => `<i>${subKey}:</i> ${value[subKey]}`);
+        arrayValue = Object.keys(value).map(subKey => `<i>${subKey}:</i> <span>${value[subKey]}</span>`);
       }
 
       if (arrayValue) {
+        secondCell.classList.add('object-values');
         if (arrayValue.length > 10) {
           arrayValue = arrayValue
             .slice(0, 5)
             .concat(['....'])
             .concat(arrayValue.slice(arrayValue.length - 5));
         }
-        secondCell.innerHTML = arrayValue.join('<br>');
+        secondCell.innerHTML = arrayValue.join('');
       } else {
         secondCell.innerHTML = value;
       }
