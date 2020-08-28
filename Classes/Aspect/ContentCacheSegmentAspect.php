@@ -142,7 +142,7 @@ class ContentCacheSegmentAspect
         }
 
         $result = $joinPoint->getAdviceChain()->proceed($joinPoint);
-        $this->interceptedCacheEntryValues['=>'] = $result;
+        $this->interceptedCacheEntryValues['=> hashed identifier'] = $result;
         return $result;
     }
 

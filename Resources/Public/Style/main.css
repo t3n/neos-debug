@@ -48,12 +48,15 @@
   font-size: 1em;
 }
 
+.t3n__content-cache-debug-table .object-values {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-gap: .2rem .5rem;
+}
+
 .t3n__content-cache-debug-table i {
   font-style: normal;
-  background: #f9423a;
-  color: #fff;
-  padding: 0 4px;
-  border-radius: 2px;
+  font-weight: bold;
 }
 
 .t3n__content-cache-debug-shelf div:first-child {
