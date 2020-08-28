@@ -137,8 +137,8 @@ class CollectDebugInformationAspect
      */
     public function startSqlLogging(\Neos\Flow\AOP\JoinPointInterface $joinPoint): void
     {
-         $this->sqlLoggingStack = new DebugStack();
-         $this->entityManager->getConfiguration()->setSQLLogger($this->sqlLoggingStack);
+        $this->sqlLoggingStack = new DebugStack();
+        $this->entityManager->getConfiguration()->setSQLLogger($this->sqlLoggingStack);
     }
 
     /**
