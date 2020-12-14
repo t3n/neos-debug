@@ -176,6 +176,13 @@ class ContentCacheSegmentAspect
             + ['fusionObject' => ObjectAccess::getProperty($this->interceptedFusionObject, 'fusionObjectName', true)]
             + array_slice($info, $injectPosition, count($info) - $injectPosition, true);
 
+        // Add debug data only to html output
+        $segmentFormat = $info['entryIdentifier']['format'] ?? null;
+
+        if ($segmentFormat !== 'html') {
+            return $segment;
+        }
+
         $info['created'] = (new \DateTime())->format(DATE_W3C);
 
         $cCacheDebugData = '<!--__T3N_CONTENT_CACHE_DEBUG__ ' . json_encode($info) . ' -->';
