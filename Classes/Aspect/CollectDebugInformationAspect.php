@@ -15,6 +15,8 @@ namespace t3n\Neos\Debug\Aspect;
  */
 
 use Doctrine\ORM\EntityManagerInterface;
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Utils;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Aop\JoinPointInterface;
 use t3n\Neos\Debug\Logging\DebugStack;
@@ -80,11 +82,13 @@ class CollectDebugInformationAspect
      * @Flow\Around("method(Neos\Neos\View\FusionView->render()) && t3n\Neos\Debug\Aspect\CollectDebugInformationAspect->debuggingActive")
      *
      * @param \Neos\Flow\AOP\JoinPointInterface $joinPoint
+     *
+     * @return string|Response
      */
-    public function addDebugValues(JoinPointInterface $joinPoint): string
+    public function addDebugValues(JoinPointInterface $joinPoint)
     {
         $startRenderAt = microtime(true) * 1000;
-        $output = $joinPoint->getAdviceChain()->proceed($joinPoint);
+        $response = $joinPoint->getAdviceChain()->proceed($joinPoint);
         $endRenderAt = microtime(true) * 1000;
 
         $renderTime = round($endRenderAt - $startRenderAt, 2);
@@ -98,6 +102,16 @@ class CollectDebugInformationAspect
             } else {
                 $this->debugService->addMetric('contentCacheMiss', null, 'Content cache miss');
             }
+        }
+
+        if (! $this->htmlOutputEnabled) {
+            return $response;
+        }
+
+        if ($response instanceof Response) {
+            $output = $response->getBody()->getContents();
+        } else {
+            $output = $response;
         }
 
         $data = [
@@ -114,22 +128,19 @@ class CollectDebugInformationAspect
             'cCacheMisses' => $this->contentCacheMisses,
         ];
 
-        if ($output instanceof \GuzzleHttp\Psr7\Response) {
-            $output = $output->getBody()->getContents();
-        }
-
-        if (! $this->htmlOutputEnabled) {
-            return $output;
-        }
-
         $debugOutput = '<!--__T3N_NEOS_DEBUG__ ' . json_encode($data) . '-->';
         $htmlEndPosition = strpos($output, '</html>');
 
         if ($htmlEndPosition === false) {
-            return $output . $debugOutput;
+            $output .= $debugOutput;
+        } else {
+            $output = substr($output, 0, $htmlEndPosition) . $debugOutput . substr($output, $htmlEndPosition);
         }
 
-        return substr($output, 0, $htmlEndPosition) . $debugOutput . substr($output, $htmlEndPosition);
+        if ($response instanceof Response) {
+            return $response->withBody(Utils::streamFor($output));
+        }
+        return $output;
     }
 
     /**
