@@ -22,6 +22,7 @@ prototype(t3n.Neos.Debug:JavaScript) < prototype(Neos.Fusion:Tag) {
     }
 
     @if.notInBackend = ${!documentNode.context.inBackend}
+    @if.isHtml = ${request.format == 'html'}
     @if.isActive = ${Configuration.setting('t3n.Neos.Debug.enabled') && Configuration.setting('t3n.Neos.Debug.htmlOutput.enabled')}
     @position = 'before closingBodyTag'
 }

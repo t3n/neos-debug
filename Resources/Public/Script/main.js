@@ -33,6 +33,9 @@ window.__enable_neos_debug__ = (setCookie = false) => {
   if (dataNode) {
     debugInfos = JSON.parse(dataNode.nodeValue.substring(DEBUG_PREFIX.length));
   }
+
+  if (!Object.keys(debugInfos).length) return;
+
   debugInfos.cCacheUncached = 0;
 
   // Takes an ISO time and returns a string representing how
