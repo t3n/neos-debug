@@ -54,6 +54,13 @@
   grid-gap: .2rem .5rem;
 }
 
+.t3n__content-cache-debug-table .object-values span {
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .t3n__content-cache-debug-table i {
   font-style: normal;
   font-weight: bold;

@@ -141,6 +141,7 @@ class ContentCacheSegmentAspect
      */
     public function interceptContentCacheEntryIdentifier(JoinPointInterface $joinPoint): string
     {
+        $fusionPath = $joinPoint->getMethodArgument('fusionPath');
         $cacheIdentifierValues = $joinPoint->getMethodArgument('cacheIdentifierValues');
         $this->interceptedCacheEntryValues = [];
 
@@ -153,6 +154,7 @@ class ContentCacheSegmentAspect
         }
 
         $result = $joinPoint->getAdviceChain()->proceed($joinPoint);
+        $this->interceptedCacheEntryValues['[fusionPath]'] = htmlspecialchars($fusionPath);
         $this->interceptedCacheEntryValues['=> hashed identifier'] = $result;
         return $result;
     }
