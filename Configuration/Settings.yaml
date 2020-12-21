@@ -18,15 +18,13 @@ Neos:
 
   Flow:
     http:
-      chain:
-        'process':
-          chain:
-            t3n.Neos.Debug:MeasureServerTiming:
-              position: 'start'
-              component: 't3n\Neos\Debug\Http\MeasureServerTimingComponent'
-            t3n.Neos.Debug:AddServerTimingHeader:
-              position: 'after setHeader'
-              component: 't3n\Neos\Debug\Http\AddServerTimingHeaderComponent'
+      middlewares:
+        t3n.Neos.Debug:MeasureServerTiming:
+          position: 'start'
+          middleware: 't3n\Neos\Debug\Http\Middleware\MeasureServerTimingMiddleware'
+        t3n.Neos.Debug:AddServerTimingHeader:
+          position: 'after dispatch'
+          middleware: 't3n\Neos\Debug\Http\Middleware\AddServerTimingMiddleware'
 
     reflection:
       ignoredTags:

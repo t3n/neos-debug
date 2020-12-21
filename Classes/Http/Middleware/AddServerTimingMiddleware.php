@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace t3n\Neos\Debug\Http;
+namespace t3n\Neos\Debug\Http\Middleware;
 
 /**
  * This file is part of the t3n.Neos.Debugger package.
@@ -15,14 +15,16 @@ namespace t3n\Neos\Debug\Http;
  */
 
 use Neos\Flow\Annotations as Flow;
-use Neos\Flow\Http\Component\ComponentContext;
-use Neos\Flow\Http\Component\ComponentInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use t3n\Neos\Debug\Service\DebugService;
 
 /**
  * Cache control header component
  */
-class AddServerTimingHeaderComponent implements ComponentInterface
+class AddServerTimingMiddleware implements MiddlewareInterface
 {
     /**
      * @Flow\InjectConfiguration(path="serverTimingHeader.enabled")
@@ -38,16 +40,14 @@ class AddServerTimingHeaderComponent implements ComponentInterface
      */
     protected $debugService;
 
-    /**
-     * @inheritDoc
-     */
-    public function handle(ComponentContext $componentContext)
-    {
-        if (! $this->enabled) {
-            return;
-        }
 
-        $response = $componentContext->getHttpResponse();
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $response = $handler->handle($request);
+
+        if (! $this->enabled) {
+            return $response;
+        }
 
         $serverTiming = '';
         $metrics = $this->debugService->getMetrics();
@@ -61,8 +61,6 @@ class AddServerTimingHeaderComponent implements ComponentInterface
             }
         }
 
-        $modifiedResponse = $response->withAddedHeader('Server-Timing', $serverTiming);
-
-        $componentContext->replaceHttpResponse($modifiedResponse);
+        return  $response->withAddedHeader('Server-Timing', $serverTiming);
     }
 }
