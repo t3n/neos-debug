@@ -40,7 +40,6 @@ class AddServerTimingMiddleware implements MiddlewareInterface
      */
     protected $debugService;
 
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);
@@ -61,6 +60,6 @@ class AddServerTimingMiddleware implements MiddlewareInterface
             }
         }
 
-        return  $response->withAddedHeader('Server-Timing', $serverTiming);
+        return $response->withAddedHeader('Server-Timing', $serverTiming);
     }
 }
