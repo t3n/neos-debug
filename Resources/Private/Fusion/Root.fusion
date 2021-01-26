@@ -10,7 +10,6 @@ prototype(t3n.Neos.Debug:Styles) < prototype(Neos.Fusion:Tag) {
 
     @if.notInBackend = ${!documentNode.context.inBackend}
     @if.isActive = ${Configuration.setting('t3n.Neos.Debug.enabled') && Configuration.setting('t3n.Neos.Debug.htmlOutput.enabled')}
-    @position = 'before closingBodyTag'
 }
 
 prototype(t3n.Neos.Debug:JavaScript) < prototype(Neos.Fusion:Tag) {
@@ -24,10 +23,13 @@ prototype(t3n.Neos.Debug:JavaScript) < prototype(Neos.Fusion:Tag) {
     @if.notInBackend = ${!documentNode.context.inBackend}
     @if.isHtml = ${request.format == 'html'}
     @if.isActive = ${Configuration.setting('t3n.Neos.Debug.enabled') && Configuration.setting('t3n.Neos.Debug.htmlOutput.enabled')}
-    @position = 'before closingBodyTag'
 }
 
 prototype(Neos.Neos:Page) {
-    head.contentCacheDebugStyle = t3n.Neos.Debug:Styles
-    contentCacheDebugScript = t3n.Neos.Debug:JavaScript
+    head.contentCacheDebugStyle = t3n.Neos.Debug:Styles {
+        @position = 'end'
+    }
+    contentCacheDebugScript = t3n.Neos.Debug:JavaScript {
+        @position = 'before closingBodyTag'
+    }
 }
