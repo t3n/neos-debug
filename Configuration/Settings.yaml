@@ -20,10 +20,10 @@ Neos:
     http:
       middlewares:
         t3n.Neos.Debug:MeasureServerTiming:
-          position: 'start'
+          position: 'start 999'
           middleware: 't3n\Neos\Debug\Http\Middleware\MeasureServerTimingMiddleware'
         t3n.Neos.Debug:AddServerTimingHeader:
-          position: 'after dispatch'
+          position: 'before dispatch 999'
           middleware: 't3n\Neos\Debug\Http\Middleware\AddServerTimingMiddleware'
 
     reflection:

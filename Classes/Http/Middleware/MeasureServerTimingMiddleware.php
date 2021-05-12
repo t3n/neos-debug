@@ -23,6 +23,8 @@ use t3n\Neos\Debug\Service\DebugService;
 
 class MeasureServerTimingMiddleware implements MiddlewareInterface
 {
+    public const TIMING_ATTRIBUTE = 't3nNeosDebugTimingStart';
+
     /**
      * @Flow\InjectConfiguration(path="serverTimingHeader.enabled")
      *
@@ -39,10 +41,11 @@ class MeasureServerTimingMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $response = $handler->handle($request);
-
         if ($this->enabled) {
-            $this->debugService->startRequestTimer();
+            $timerStart = $this->debugService->startRequestTimer();
+            $response = $handler->handle($request->withAttribute(self::TIMING_ATTRIBUTE, $timerStart));
+        } else {
+            $response = $handler->handle($request);
         }
 
         return $response;
