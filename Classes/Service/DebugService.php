@@ -22,12 +22,12 @@ use Neos\Flow\Annotations as Flow;
 class DebugService
 {
     /**
-     * @var int
+     * @var float
      */
     protected $startRequestAt;
 
     /**
-     * @var int
+     * @var float
      */
     protected $stopRequestAt;
 
@@ -39,9 +39,17 @@ class DebugService
     /**
      * Starts the timer for the request process
      */
-    public function startRequestTimer(): void
+    public function startRequestTimer(): float
     {
-        $this->startRequestAt = microtime(true) * 1000;
+        return $this->startRequestAt = microtime(true) * 1000;
+    }
+
+    /**
+     * Sets the starttime of the request
+     */
+    public function setStartRequestAt(float $startRequestAt): void
+    {
+        $this->startRequestAt = $startRequestAt;
     }
 
     /**

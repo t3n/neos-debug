@@ -49,6 +49,7 @@ class AddServerTimingMiddleware implements MiddlewareInterface
         }
 
         $serverTiming = '';
+        $this->debugService->setStartRequestAt($request->getAttribute(MeasureServerTimingMiddleware::TIMING_ATTRIBUTE));
         $metrics = $this->debugService->getMetrics();
         foreach ($metrics as $key => ['value' => $value, 'description' => $description]) {
             $serverTiming .= ($serverTiming ? ', ' : '') . $key;
