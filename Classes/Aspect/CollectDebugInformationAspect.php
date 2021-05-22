@@ -110,6 +110,7 @@ class CollectDebugInformationAspect
 
         if ($response instanceof Response) {
             $output = $response->getBody()->getContents();
+            $response->getBody()->rewind();
 
             if ($response->getHeader('Content-Type') !== 'text/html'
                 && strpos($output, '<!DOCTYPE html>') === false) {
