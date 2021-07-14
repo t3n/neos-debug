@@ -80,7 +80,8 @@ class CollectDebugInformationAspect
 
     /**
      * @Flow\Around("method(Neos\Neos\View\FusionView->render()) && t3n\Neos\Debug\Aspect\CollectDebugInformationAspect->debuggingActive")
-     *
+     * @Flow\Around("method(Neos\Fusion\View\FusionView->render()) && t3n\Neos\Debug\Aspect\CollectDebugInformationAspect->debuggingActive")
+     * 
      * @param \Neos\Flow\AOP\JoinPointInterface $joinPoint
      *
      * @return string|Response
