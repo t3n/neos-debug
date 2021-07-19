@@ -120,6 +120,8 @@ class CollectDebugInformationAspect
             $output = $response;
         }
 
+        $groupedQueries = $this->groupQueries($this->sqlLoggingStack->queries);
+
         $data = [
             'startRenderAt' => $startRenderAt,
             'endRenderAt' => $endRenderAt,
@@ -129,9 +131,11 @@ class CollectDebugInformationAspect
                 'executionTime' => $sqlExecutionTime,
                 'tables' => $this->sqlLoggingStack->tables,
                 'slowQueries' => $this->sqlLoggingStack->slowQueries,
+                'groupedQueries' => $groupedQueries,
             ],
             'cCacheHits' => $this->contentCacheHits,
             'cCacheMisses' => $this->contentCacheMisses,
+            'cCacheUncached' => 0, // Init as 0 as the actual number has to be resolved from the individual cache entries
         ];
 
         $debugOutput = '<!--__T3N_NEOS_DEBUG__ ' . json_encode($data) . '-->';
@@ -181,5 +185,39 @@ class CollectDebugInformationAspect
     {
         $result = $joinPoint->getResult();
         $this->contentCacheHits += $result;
+    }
+
+    /**
+     * Queries look like ['sql' => $sql, 'table' => $tableName, 'params' => $params, 'types' => $types, 'executionMS' => 0]
+     */
+    protected function groupQueries(array $queries): array
+    {
+        return array_reduce($queries, static function ($carry, $queryData) {
+            ['sql' => $sql, 'table' => $table, 'params' => $params, 'executionMS' => $executionMS] = $queryData;
+            $paramString = json_encode($params);
+
+            if (!array_key_exists($table, $carry)) {
+                $carry[$table] = [];
+            }
+
+            if (!array_key_exists($sql, $carry[$table])) {
+                $carry[$table][$sql] = [
+                    'executionTimeSum' => 0,
+                    'count' => 0,
+                    'params' => [],
+                ];
+            }
+
+            $carry[$table][$sql]['executionTimeSum'] += $executionMS;
+            $carry[$table][$sql]['count']++;
+
+            if (!array_key_exists($paramString, $carry[$table][$sql]['params'])) {
+                $carry[$table][$sql]['params'][$paramString] = 1;
+            } else {
+                $carry[$table][$sql]['params'][$paramString]++;
+            }
+
+            return $carry;
+        }, []);
     }
 }
