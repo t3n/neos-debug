@@ -1,0 +1,9 @@
+prototype(Neos.Neos:Page) {
+    head.contentCacheDebugStyle = t3n.Neos.Debug:Fragment.Styles {
+        @position = 'end'
+    }
+    contentCacheDebugScript = t3n.Neos.Debug:Fragment.Scripts {
+        @position = 'before closingBodyTag'
+    }
+
+}

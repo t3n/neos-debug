@@ -1,0 +1,12 @@
+prototype(t3n.Neos.Debug:Fragment.Styles) < prototype(Neos.Fusion:Tag) {
+    tagName = 'link'
+    attributes {
+        rel = 'stylesheet'
+        href = Neos.Fusion:ResourceUri {
+            path = 'resource://t3n.Neos.Debug/Public/Style/main.css'
+        }
+    }
+
+    @if.notInBackend = ${!documentNode.context.inBackend}
+    @if.isActive = ${Configuration.setting('t3n.Neos.Debug.enabled') && Configuration.setting('t3n.Neos.Debug.htmlOutput.enabled')}
+}

@@ -1,0 +1,14 @@
+prototype(t3n.Neos.Debug:Fragment.Scripts) < prototype(Neos.Fusion:Component) {
+    renderer = afx`
+        <script async @children="attributes.src">
+            <Neos.Fusion:ResourceUri path="resource://t3n.Neos.Debug/Public/Scripts/main.js" />
+        </script>
+        <script async @children="attributes.src">
+            <Neos.Fusion:ResourceUri path="resource://t3n.Neos.Debug/Public/Script/main.js" />
+        </script>
+    `
+
+    @if.notInBackend = ${!documentNode.context.inBackend}
+    @if.isHtml = ${request.format == 'html'}
+    @if.isActive = ${Configuration.setting('t3n.Neos.Debug.enabled') && Configuration.setting('t3n.Neos.Debug.htmlOutput.enabled')}
+}
