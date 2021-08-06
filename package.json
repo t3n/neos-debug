@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "esbuild Resources/Private/Scripts/index.tsx --bundle --minify --sourcemap --outfile=Resources/Public/Scripts/main.js",
-    "watch": "esbuild Resources/Private/Scripts/index.tsx --bundle --watch --sourcemap --outfile=Resources/Public/Scripts/main.js"
+    "start": "esbuild Resources/Private/Scripts/index.tsx --bundle --watch --sourcemap --outfile=Resources/Public/Scripts/main.js"
   },
   "devDependencies": {
     "@types/preact-custom-element": "^4.0.1",

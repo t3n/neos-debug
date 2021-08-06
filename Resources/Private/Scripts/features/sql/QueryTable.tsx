@@ -7,6 +7,7 @@ import QueryTableRow from './QueryTableRow';
 const styles = css`
     width: 100%;
     margin-bottom: 4rem;
+    table-layout: fixed;
 
     th {
         font-weight: bold;
@@ -48,17 +49,16 @@ const QueryTable: FunctionComponent = () => {
         <table className={styles}>
             <thead>
                 <tr>
-                    <th>Query</th>
-                    <th>Cumulative execution time</th>
-                    <th>Execution count</th>
-                    <th>Params</th>
+                    <th style={{ textAlign: 'left' }}>Query</th>
+                    <th style={{ width: '100px', textAlign: 'right' }}>Total time</th>
+                    <th style={{ width: '100px', textAlign: 'right' }}>Count</th>
                 </tr>
             </thead>
             <tbody>
                 {Object.keys(groupedQueries).map((tableName) => (
                     <>
                         <tr className={tableNameStyle}>
-                            <td colSpan={4}>
+                            <td colSpan={3}>
                                 <strong>{tableName}</strong>
                             </td>
                         </tr>

@@ -11,6 +11,7 @@ const styles = css`
     display: flex;
     font-size: 18px;
     justify-content: center;
+    align-items: center;
     pointer-events: none;
     position: fixed;
     right: 4rem;
@@ -33,6 +34,12 @@ const styles = css`
         }
     }
 
+    > svg {
+        padding: 0.5rem;
+        width: auto;
+        height: 1.5rem;
+    }
+
     button {
         border-left: 1px solid var(--colors-ContrastDark);
         &:hover {
@@ -49,6 +56,16 @@ const StatusBar: FunctionComponent = () => {
 
     return (
         <div className={styles}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+                <path
+                    fill="#26224C"
+                    d="M132.984 37.5l-20.642 15.162v31.716l20.642 29.413M132.984 150.564L53.627 37.5l-9.193 6.773V162.5l20.642-15.162V88.79l51.619 73.71h22.58l16.291-11.936"
+                />
+                <path
+                    fill="#00ADEE"
+                    d="M65.076 88.79v58.548L44.434 162.5h22.582l20.642-15.162v-26.3M132.984 113.791V37.5h22.582v113.064h-22.582L53.627 37.5h25.809"
+                />
+            </svg>
             <div>{renderTime} ms render time</div>
             <button>🔦 Inspect</button>
             <button onClick={toggleQueryOverlay}>
