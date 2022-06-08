@@ -69,8 +69,10 @@ class ContentCacheSegmentAspect
 
     /**
      * @Flow\Around("method(Neos\Fusion\Core\Cache\ContentCache->createCacheSegment()) && t3n\Neos\Debug\Aspect\ContentCacheSegmentAspect->debuggingActive")
+     *
+     * @return mixed
      */
-    public function wrapCachedSegment(JoinPointInterface $joinPoint): string
+    public function wrapCachedSegment(JoinPointInterface $joinPoint)
     {
         $segment = $joinPoint->getAdviceChain()->proceed($joinPoint);
         $fusionPath = $joinPoint->getMethodArgument('fusionPath');
@@ -88,8 +90,10 @@ class ContentCacheSegmentAspect
 
     /**
      * @Flow\Around("method(Neos\Fusion\Core\Cache\RuntimeContentCache->evaluateUncached()) && t3n\Neos\Debug\Aspect\ContentCacheSegmentAspect->debuggingActive")
+     *
+     * @return mixed
      */
-    public function wrapEvaluateUncached(JoinPointInterface $joinPoint): string
+    public function wrapEvaluateUncached(JoinPointInterface $joinPoint)
     {
         $start = microtime(true);
         $segment = $joinPoint->getAdviceChain()->proceed($joinPoint);
@@ -106,8 +110,10 @@ class ContentCacheSegmentAspect
 
     /**
      * @Flow\Around("method(Neos\Fusion\Core\Cache\ContentCache->createUncachedSegment()) && t3n\Neos\Debug\Aspect\ContentCacheSegmentAspect->debuggingActive")
+     *
+     * @return mixed
      */
-    public function wrapUncachedSegment(JoinPointInterface $joinPoint): string
+    public function wrapUncachedSegment(JoinPointInterface $joinPoint)
     {
         $segment = $joinPoint->getAdviceChain()->proceed($joinPoint);
 
@@ -120,8 +126,10 @@ class ContentCacheSegmentAspect
 
     /**
      * @Flow\Around("method(Neos\Fusion\Core\Cache\ContentCache->createDynamicCachedSegment()) && t3n\Neos\Debug\Aspect\ContentCacheSegmentAspect->debuggingActive")
+     *
+     * @return mixed
      */
-    public function wrapDynamicSegment(JoinPointInterface $joinPoint): string
+    public function wrapDynamicSegment(JoinPointInterface $joinPoint)
     {
         $segment = $joinPoint->getAdviceChain()->proceed($joinPoint);
 
@@ -170,8 +178,10 @@ class ContentCacheSegmentAspect
     /**
      * @param mixed $segment This is mixed as the RuntimeContentCache might also return none string values
      * @param mixed[] $info
+     *
+     * @return mixed
      */
-    protected function renderCacheInfoIntoSegment($segment, array $info): string
+    protected function renderCacheInfoIntoSegment($segment, array $info)
     {
         $injectPosition = 2;
         $info = array_slice($info, 0, $injectPosition, true)
