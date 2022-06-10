@@ -69,10 +69,8 @@ class ContentCacheSegmentAspect
 
     /**
      * @Flow\Around("method(Neos\Fusion\Core\Cache\ContentCache->createCacheSegment()) && t3n\Neos\Debug\Aspect\ContentCacheSegmentAspect->debuggingActive")
-     *
-     * @return mixed
      */
-    public function wrapCachedSegment(JoinPointInterface $joinPoint)
+    public function wrapCachedSegment(JoinPointInterface $joinPoint): string
     {
         $segment = $joinPoint->getAdviceChain()->proceed($joinPoint);
         $fusionPath = $joinPoint->getMethodArgument('fusionPath');
@@ -91,7 +89,7 @@ class ContentCacheSegmentAspect
     /**
      * @Flow\Around("method(Neos\Fusion\Core\Cache\RuntimeContentCache->evaluateUncached()) && t3n\Neos\Debug\Aspect\ContentCacheSegmentAspect->debuggingActive")
      *
-     * @return mixed
+     * @return mixed the result of uncached segments might not be of type string, so we cannot define the return type
      */
     public function wrapEvaluateUncached(JoinPointInterface $joinPoint)
     {
@@ -110,10 +108,8 @@ class ContentCacheSegmentAspect
 
     /**
      * @Flow\Around("method(Neos\Fusion\Core\Cache\ContentCache->createUncachedSegment()) && t3n\Neos\Debug\Aspect\ContentCacheSegmentAspect->debuggingActive")
-     *
-     * @return mixed
      */
-    public function wrapUncachedSegment(JoinPointInterface $joinPoint)
+    public function wrapUncachedSegment(JoinPointInterface $joinPoint): string
     {
         $segment = $joinPoint->getAdviceChain()->proceed($joinPoint);
 
@@ -126,10 +122,8 @@ class ContentCacheSegmentAspect
 
     /**
      * @Flow\Around("method(Neos\Fusion\Core\Cache\ContentCache->createDynamicCachedSegment()) && t3n\Neos\Debug\Aspect\ContentCacheSegmentAspect->debuggingActive")
-     *
-     * @return mixed
      */
-    public function wrapDynamicSegment(JoinPointInterface $joinPoint)
+    public function wrapDynamicSegment(JoinPointInterface $joinPoint): string
     {
         $segment = $joinPoint->getAdviceChain()->proceed($joinPoint);
 
@@ -179,7 +173,7 @@ class ContentCacheSegmentAspect
      * @param mixed $segment This is mixed as the RuntimeContentCache might also return none string values
      * @param mixed[] $info
      *
-     * @return mixed
+     * @return mixed the cached data might not be of type string, so we cannot define the return type
      */
     protected function renderCacheInfoIntoSegment($segment, array $info)
     {
