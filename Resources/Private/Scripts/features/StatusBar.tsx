@@ -15,7 +15,7 @@ const styles = css`
     pointer-events: none;
     position: fixed;
     right: 4rem;
-    top: 0;
+    bottom: 0;
     width: auto;
     z-index: 10003;
 
@@ -52,6 +52,8 @@ const StatusBar: FunctionComponent = () => {
     const {
         debugInfos: { renderTime, sqlData, cCacheHits, cCacheMisses, cCacheUncached },
         toggleQueryOverlay,
+        toggleCacheOverlay,
+        closeApp,
     } = useDebugContext();
 
     return (
@@ -71,10 +73,10 @@ const StatusBar: FunctionComponent = () => {
             <button onClick={toggleQueryOverlay}>
                 🗄 SQL ({sqlData.queryCount} queries, {sqlData.slowQueries.length} are slow)
             </button>
-            <button>
+            <button onClick={toggleCacheOverlay}>
                 ⚡️ Cache (hits: {cCacheHits}, misses: {cCacheMisses.length}, uncached {cCacheUncached})
             </button>
-            <button>🚫 Close</button>
+            <button onClick={closeApp}>🚫 Close</button>
         </div>
     );
 };

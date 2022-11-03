@@ -187,7 +187,7 @@ class ContentCacheSegmentAspect
 
         $info['created'] = (new \DateTime())->format(DATE_W3C);
 
-        $cCacheDebugData = '<!--__T3N_CONTENT_CACHE_DEBUG__ ' . json_encode($info) . ' -->';
+        $cCacheDebugData = '<!--__NEOS_CONTENT_CACHE_DEBUG__ ' . json_encode($info) . ' -->';
 
         if (! is_string($segment)) {
             return $cCacheDebugData;

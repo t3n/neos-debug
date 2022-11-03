@@ -16,18 +16,29 @@
   },
   "devDependencies": {
     "@types/preact-custom-element": "^4.0.1",
-    "@typescript-eslint/eslint-plugin": "^4.28.3",
-    "@typescript-eslint/parser": "^4.28.3",
-    "esbuild": "^0.12.15",
-    "eslint": "^7.30.0",
-    "eslint-config-prettier": "^8.3.0",
+    "@typescript-eslint/eslint-plugin": "^5.41.0",
+    "@typescript-eslint/parser": "^5.41.0",
+    "esbuild": "^0.15.12",
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-preact": "^0.1.0",
-    "eslint-plugin-prettier": "^3.4.0",
-    "prettier": "^2.3.2",
-    "typescript": "^4.3.5"
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.4"
   },
   "browserslist": [
     "> 1%",
-    "Last 2 versions"
-  ]
+    "Last 2 versions",
+    "not dead"
+  ],
+  "fig": {
+    "build": {
+      "description": "Build the plugin",
+      "icon": "🛠"
+    },
+    "start": {
+      "description": "Start developing the plugin",
+      "icon": "⭐️"
+    }
+  }
 }

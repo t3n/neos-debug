@@ -138,7 +138,7 @@ class CollectDebugInformationAspect
             'cCacheUncached' => 0, // Init as 0 as the actual number has to be resolved from the individual cache entries
         ];
 
-        $debugOutput = '<!--__T3N_NEOS_DEBUG__ ' . json_encode($data) . '-->';
+        $debugOutput = '<!--__NEOS_DEBUG__ ' . json_encode($data) . '-->';
         $htmlEndPosition = strpos($output, '</html>');
 
         if ($htmlEndPosition === false) {

@@ -19,7 +19,7 @@ module.exports = {
         es6: true,
         node: true,
     },
-    ignorePatterns: ['.cache', 'dist', 'node_modules/'],
+    ignorePatterns: ['.cache', 'Classes', 'node_modules', 'Configuration', 'Resources/Public'],
     rules: {
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
