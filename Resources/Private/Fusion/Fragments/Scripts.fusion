@@ -3,9 +3,6 @@ prototype(t3n.Neos.Debug:Fragment.Scripts) < prototype(Neos.Fusion:Component) {
         <script async @children="attributes.src">
             <Neos.Fusion:ResourceUri path="resource://t3n.Neos.Debug/Public/Scripts/main.js" />
         </script>
-        <script async @children="attributes.src">
-            <Neos.Fusion:ResourceUri path="resource://t3n.Neos.Debug/Public/Script/main.js" />
-        </script>
     `
 
     @if.notInBackend = ${!documentNode.context.inBackend}
