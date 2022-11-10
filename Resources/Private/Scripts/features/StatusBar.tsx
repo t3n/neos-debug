@@ -14,7 +14,7 @@ const styles = css`
     align-items: center;
     pointer-events: none;
     position: fixed;
-    right: 4rem;
+    right: 0;
     bottom: 0;
     width: auto;
     z-index: 10003;
@@ -53,6 +53,7 @@ const StatusBar: FunctionComponent = () => {
         debugInfos: { renderTime, sqlData, cCacheHits, cCacheMisses, cCacheUncached },
         toggleQueryOverlay,
         toggleCacheOverlay,
+        toggleInspectionOverlay,
         closeApp,
     } = useDebugContext();
 
@@ -69,7 +70,7 @@ const StatusBar: FunctionComponent = () => {
                 />
             </svg>
             <div>{renderTime} ms render time</div>
-            <button>🔦 Inspect</button>
+            <button onClick={toggleInspectionOverlay}>🔎 Inspect</button>
             <button onClick={toggleQueryOverlay}>
                 🗄 SQL ({sqlData.queryCount} queries, {sqlData.slowQueries.length} are slow)
             </button>

@@ -12,9 +12,11 @@ interface ProviderValues {
     debugInfos: DebugInfos;
     cacheInfos: CacheInfo[];
     showQueryOverlay: boolean;
-    toggleQueryOverlay: () => void;
     showCacheOverlay: boolean;
+    showInspectionOverlay: boolean;
+    toggleQueryOverlay: () => void;
     toggleCacheOverlay: () => void;
+    toggleInspectionOverlay: () => void;
     closeApp: () => void;
 }
 
@@ -24,6 +26,7 @@ export const useDebugContext = () => useContext(DebugContext);
 export const DebugProvider = ({ debugInfos, cacheInfos, closeApp, children }: ProviderProps) => {
     const [showQueryOverlay, setShowQueryOverlay] = useState(false);
     const [showCacheOverlay, setShowCacheOverlay] = useState(false);
+    const [showInspectionOverlay, setShowInspectionOverlay] = useState(false);
 
     const toggleQueryOverlay = useCallback(() => {
         setShowQueryOverlay((prev) => !prev);
@@ -33,15 +36,21 @@ export const DebugProvider = ({ debugInfos, cacheInfos, closeApp, children }: Pr
         setShowCacheOverlay((prev) => !prev);
     }, []);
 
+    const toggleInspectionOverlay = useCallback(() => {
+        setShowInspectionOverlay((prev) => !prev);
+    }, []);
+
     return (
         <DebugContext.Provider
             value={{
                 debugInfos,
                 cacheInfos,
                 showQueryOverlay,
-                toggleQueryOverlay,
                 showCacheOverlay,
+                showInspectionOverlay,
                 toggleCacheOverlay,
+                toggleQueryOverlay,
+                toggleInspectionOverlay,
                 closeApp,
             }}
         >

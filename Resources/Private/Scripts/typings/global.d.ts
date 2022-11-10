@@ -27,6 +27,7 @@ type CacheInfo = {
     entryIdentifier: Record<string, any>;
     entryTags: string[];
     lifetime: null | number;
+    parentNode: HTMLElement;
 };
 
 type DebugInfos = {

@@ -26,8 +26,9 @@ const styles = css`
 
 const closeButtonStyle = css`
     position: absolute;
-    right: 1rem;
-    top: 1rem;
+    right: 0;
+    top: 0;
+    padding: 1rem;
 `;
 
 type OverlayProps = {
@@ -39,7 +40,7 @@ const Overlay: FunctionComponent<OverlayProps> = ({ children, toggleOverlay }) =
     return (
         <div className={styles}>
             {children}
-            <button className={closeButtonStyle} onClick={toggleOverlay}>
+            <button type="button" className={closeButtonStyle} onClick={toggleOverlay}>
                 ❌
             </button>
         </div>

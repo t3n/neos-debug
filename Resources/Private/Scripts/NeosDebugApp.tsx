@@ -3,6 +3,7 @@ import { Component, h } from 'preact';
 import StatusBar from './features/StatusBar';
 import QueryOverlay from './features/sql/QueryOverlay';
 import CacheOverlay from './features/cache/CacheOverlay';
+import InspectionOverlay from './features/inspection/InspectionOverlay';
 import { DebugProvider } from './context/DebugContext';
 import { css, styleContainer } from './styles/css';
 import prettyDate from './helper/prettyDate';
@@ -31,13 +32,13 @@ const styles = css`
     --colors-UncheckedCheckboxTick: #5b5b5b;
 
     button {
-        background: transparent;
         border: none;
+        background-color: var(--colors-ContrastDarker);
         color: var(--colors-ContrastBrightest);
-        cursor: pointer;
+        cursor: pointer; 
 
         &:hover {
-            background-color: var(--colors-contrastDarker);
+            background-color: var(--colors-ContrastDark);
             color: var(--colors-PrimaryBlue);
         }
     }
@@ -70,13 +71,16 @@ class NeosDebugApp extends Component<AppProps, AppState> {
         });
     }
 
-    processCacheInfo(parentNode: Node, cacheInfo: CacheInfo): void {
+    processCacheInfo(parentNode: HTMLElement, cacheInfo: CacheInfo): void {
         const { mode, created, fusionPath } = cacheInfo;
         if (mode === 'uncached') {
             this.debugInfos.cCacheUncached++;
         }
 
         cacheInfo.hit = mode !== 'uncached' && this.debugInfos.cCacheMisses.includes(fusionPath);
+        cacheInfo.parentNode = parentNode;
+
+        parentNode.dataset.neosDebugId = cacheInfo.fusionPath;
 
         // Format timestamp to a readable string
         cacheInfo.created =
@@ -94,7 +98,7 @@ class NeosDebugApp extends Component<AppProps, AppState> {
         const cacheNodes = this.loadNodes(CACHE_PREFIX);
         while (cacheNodes.nextNode()) {
             const { currentNode } = cacheNodes;
-            const parentNode = (currentNode as Element).previousElementSibling;
+            const parentNode = (currentNode as HTMLElement).previousElementSibling as HTMLElement;
             if (!parentNode) continue;
 
             const cacheInfo: CacheInfo = JSON.parse(currentNode.nodeValue.substring(CACHE_PREFIX.length));
@@ -140,6 +144,7 @@ class NeosDebugApp extends Component<AppProps, AppState> {
                     <StatusBar />
                     <QueryOverlay />
                     <CacheOverlay />
+                    <InspectionOverlay />
                 </div>
             </DebugProvider>
         );
