@@ -38,7 +38,19 @@ _Disclaimer: Once the debug mode is enabled you might expose sensitive data. Mak
 
 In a previous version of this package your current user needed a specific role as well. We dropped this requirement for now as you could not use this package if you don't have a frontend login on your site. Once the package is active it will render some metadata in your html output.
 
-To get the debugger running you now need to include some javascript and css to acutally render the debug console. This package ships two fusion prototypes to include all resources. If your Document extends `Neos.Neos:Page` you don't need to include anything. We already added the resources to `Neos.Neos:Page` prototype.
+To get the debugger running you now need to include some javascript and css to actually render the debug console. This package ships two fusion prototypes to include all resources. If your Document extends `Neos.Neos:Page` you don't need to include anything. We already added the resources to `Neos.Neos:Page` prototype.
+
+Note: If you are using `Sandstorm.CookiePunch`, make sure to unblock the debugger js. This can be done using this configuration snippet:
+
+```yaml
+Sandstorm:
+  CookiePunch:
+    blocking:
+      tagPatterns:
+        script:
+          "Packages/t3n.Neos.Debug":
+            block: false
+```
 
 ### HTTP Server-Timing header   
 
