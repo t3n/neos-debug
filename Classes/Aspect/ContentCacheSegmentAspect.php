@@ -61,7 +61,7 @@ class ContentCacheSegmentAspect
     }
 
     /**
-     * @Flow\Pointcut("setting(t3n.Neos.Debug.enabled)")
+     * @Flow\Pointcut("setting(t3n.Neos.Debug.enabled) && setting(t3n.Neos.Debug.htmlOutput.enabled)")
      */
     public function debuggingActive(): void
     {
