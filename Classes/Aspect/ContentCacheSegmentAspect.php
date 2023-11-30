@@ -61,7 +61,7 @@ class ContentCacheSegmentAspect
     }
 
     /**
-     * @Flow\Pointcut("setting(t3n.Neos.Debug.enabled)")
+     * @Flow\Pointcut("setting(t3n.Neos.Debug.enabled) && setting(t3n.Neos.Debug.htmlOutput.enabled)")
      */
     public function debuggingActive(): void
     {
@@ -88,8 +88,10 @@ class ContentCacheSegmentAspect
 
     /**
      * @Flow\Around("method(Neos\Fusion\Core\Cache\RuntimeContentCache->evaluateUncached()) && t3n\Neos\Debug\Aspect\ContentCacheSegmentAspect->debuggingActive")
+     *
+     * @return mixed the result of uncached segments might not be of type string, so we cannot define the return type
      */
-    public function wrapEvaluateUncached(JoinPointInterface $joinPoint): string
+    public function wrapEvaluateUncached(JoinPointInterface $joinPoint)
     {
         $start = microtime(true);
         $segment = $joinPoint->getAdviceChain()->proceed($joinPoint);
@@ -170,8 +172,10 @@ class ContentCacheSegmentAspect
     /**
      * @param mixed $segment This is mixed as the RuntimeContentCache might also return none string values
      * @param mixed[] $info
+     *
+     * @return mixed the cached data might not be of type string, so we cannot define the return type
      */
-    protected function renderCacheInfoIntoSegment($segment, array $info): string
+    protected function renderCacheInfoIntoSegment($segment, array $info)
     {
         $injectPosition = 2;
         $info = array_slice($info, 0, $injectPosition, true)
