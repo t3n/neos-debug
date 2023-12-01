@@ -1,7 +1,7 @@
 prototype(t3n.Neos.Debug:Fragment.Scripts) < prototype(Neos.Fusion:Component) {
     renderer = afx`
         <script async @children="attributes.src">
-            <Neos.Fusion:ResourceUri path="resource://t3n.Neos.Debug/Public/Scripts/main.js" />
+            <Neos.Fusion:ResourceUri path="resource://t3n.Neos.Debug/Public/Scripts/Plugin.js" />
         </script>
     `
 

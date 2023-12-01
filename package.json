@@ -5,40 +5,34 @@
   "license": "MIT",
   "private": true,
   "sideEffects": false,
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
-    "@emotion/css": "^11.1.3",
-    "preact": "^10.5.14",
-    "preact-custom-element": "^4.2.1"
+    "@emotion/css": "^11.11.2",
+    "preact": "^10.19.2",
+    "preact-custom-element": "^4.3.0"
   },
   "scripts": {
-    "build": "esbuild Resources/Private/Scripts/index.tsx --bundle --minify --sourcemap --outfile=Resources/Public/Scripts/main.js",
-    "start": "esbuild Resources/Private/Scripts/index.tsx --bundle --watch --sourcemap --outfile=Resources/Public/Scripts/main.js"
+    "build": "node esbuild.js",
+    "start": "node esbuild.js --watch"
   },
   "devDependencies": {
-    "@types/preact-custom-element": "^4.0.1",
-    "@typescript-eslint/eslint-plugin": "^5.41.0",
-    "@typescript-eslint/parser": "^5.41.0",
-    "esbuild": "^0.15.12",
-    "eslint": "^8.26.0",
-    "eslint-config-prettier": "^8.5.0",
+    "@types/preact-custom-element": "^4.0.4",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
+    "esbuild": "^0.19.8",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-preact": "^0.1.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.7.1",
-    "typescript": "^4.8.4"
+    "eslint-plugin-prettier": "^5.0.1",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.2"
   },
   "browserslist": [
     "> 1%",
     "Last 2 versions",
     "not dead"
   ],
-  "fig": {
-    "build": {
-      "description": "Build the plugin",
-      "icon": "🛠"
-    },
-    "start": {
-      "description": "Start developing the plugin",
-      "icon": "⭐️"
-    }
-  }
+  "packageManager": "yarn@4.0.2"
 }
