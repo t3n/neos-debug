@@ -30,17 +30,24 @@ const styles = css`
     --colors-Error: #ff460d;
     --colors-ErrorHover: #ff6a3c;
     --colors-UncheckedCheckboxTick: #5b5b5b;
+    --button-bg: var(--colors-ContrastNeutral);
 
     button {
         border: none;
-        background-color: var(--colors-ContrastDarker);
+        background-color: var(--button-bg);
         color: var(--colors-ContrastBrightest);
-        cursor: pointer; 
+        cursor: pointer;
+        white-space: break-spaces;
+        padding: 0.3rem 0.5rem;
 
         &:hover {
             background-color: var(--colors-ContrastDark);
             color: var(--colors-PrimaryBlue);
         }
+    }
+
+    svg {
+        fill: currentColor;
     }
 `;
 
@@ -104,14 +111,14 @@ class NeosDebugApp extends Component<AppProps, AppState> {
             const cacheInfo: CacheInfo = JSON.parse(currentNode.nodeValue.substring(CACHE_PREFIX.length));
             this.processCacheInfo(parentNode, cacheInfo);
         }
-        console.debug(this.cacheInfos, 'Parsed cache nodes');
+        this.writeToConsole(this.cacheInfos, 'Parsed cache nodes');
     }
 
     loadDebugInfos(): void {
         const debugNodes = this.loadNodes(DEBUG_PREFIX);
         const dataNode = debugNodes.nextNode();
         this.debugInfos = dataNode ? JSON.parse(dataNode.nodeValue.substring(DEBUG_PREFIX.length)) : null;
-        console.debug(this.debugInfos, 'Parsed debug infos');
+        this.writeToConsole(this.debugInfos, 'Parsed debug infos');
     }
 
     closeApp = () => {
@@ -124,7 +131,7 @@ class NeosDebugApp extends Component<AppProps, AppState> {
         // eslint-disable-next-line no-console
         this.writeToConsole(
             '%c Closing Neos Debug tool',
-            'color: white; background: #f9423a; line-height: 20px; font-weight: bold'
+            'color: white; background: #f9423a; line-height: 20px; font-weight: bold',
         );
     };
 

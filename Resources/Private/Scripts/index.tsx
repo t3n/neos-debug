@@ -11,7 +11,7 @@ import NeosDebugApp from './NeosDebugApp';
         // eslint-disable-next-line no-console
         console.debug(
             '%c Starting Neos Debug Tool ... ',
-            'color: white; background: #f9423a; line-height: 20px; font-weight: bold'
+            'color: white; background: #f9423a; line-height: 20px; font-weight: bold',
         );
 
         if (setCookie) {
@@ -19,7 +19,7 @@ import NeosDebugApp from './NeosDebugApp';
         } else {
             // eslint-disable-next-line no-console
             console.debug(
-                'Start the Debug tool with "__enable_neos_debug__(true)" to start up the Debug tool on every page load'
+                'Start the Debug tool with "__enable_neos_debug__(true)" to start up the Debug tool on every page load',
             );
         }
 

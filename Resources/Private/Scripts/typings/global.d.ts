@@ -2,6 +2,11 @@ interface Window {
     __enable_neos_debug: (setCookie?: boolean) => void;
 }
 
+declare module '*.svg' {
+    const content: string;
+    export default content;
+}
+
 type QueryDetails = {
     executionTimeSum: number;
     count: number;

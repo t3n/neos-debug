@@ -9,14 +9,19 @@ import Overlay from '../../presentationals/Overlay';
 let observer = null;
 
 const tableStyles = css`
-    position: absolute;
-    left: 0;
-    top: 0;
     max-width: 90vw;
     overflow: auto;
     background-color: var(--colors-ContrastDarker);
     color: var(--colors-ContrastBrightest);
     pointer-events: all;
+    
+    td {
+        vertical-align: text-bottom;
+        
+        &:first-child {
+            font-weight: bold;
+        }
+    }
 
     td span {
         white-space: nowrap;
@@ -24,6 +29,7 @@ const tableStyles = css`
         display: inline-block;
         max-width: 500px;
         overflow: hidden;
+        vertical-align: text-bottom;
     }
 `;
 

@@ -2,6 +2,8 @@ import { FunctionComponent, h } from 'preact';
 import { StateUpdater, useCallback, useEffect, useState } from 'preact/hooks';
 
 import { css } from '../../styles/css';
+import Icon from '../../presentationals/Icon';
+import magnifyingGlassIcon from '../../presentationals/icons/magnifying-glass-chart-solid.svg';
 
 type InspectionElementProps = {
     cacheInfo: CacheInfo;
@@ -38,7 +40,7 @@ const InspectionElement: FunctionComponent<InspectionElementProps> = ({ cacheInf
     const [position, setPosition] = useState<ElementPosition>(null);
 
     const recalculatePosition = useCallback(() => {
-        console.debug('scroll', fusionPath, parentNode.getBoundingClientRect());
+        // console.debug('scroll', fusionPath, parentNode.getBoundingClientRect());
         const { left, top, width, height } = parentNode.getBoundingClientRect();
         const { scrollX, scrollY } = window;
         setPosition({
@@ -72,7 +74,7 @@ const InspectionElement: FunctionComponent<InspectionElementProps> = ({ cacheInf
             }}
         >
             <button className={inspectButtonStyle} type="button" onClick={toggleDetails} title={fusionPath}>
-                🔎
+                <Icon icon={magnifyingGlassIcon} />
             </button>
         </div>
     ) : null;

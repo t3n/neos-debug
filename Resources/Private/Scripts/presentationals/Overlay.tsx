@@ -1,6 +1,9 @@
 import { ComponentChildren, FunctionComponent, h } from 'preact';
 
 import { css } from '../styles/css';
+import Icon from './Icon';
+import iconXMark from './icons/circle-xmark-regular.svg';
+import { useEffect } from 'preact/hooks';
 
 const styles = css`
     align-items: flex-start;
@@ -13,7 +16,7 @@ const styles = css`
     font-size: 12px;
     left: 1rem;
     overflow: auto;
-    padding: 2rem;
+    padding: 1rem;
     position: fixed;
     right: 1rem;
     top: 1rem;
@@ -29,6 +32,7 @@ const closeButtonStyle = css`
     right: 0;
     top: 0;
     padding: 1rem;
+    color: white;
 `;
 
 type OverlayProps = {
@@ -37,11 +41,26 @@ type OverlayProps = {
 };
 
 const Overlay: FunctionComponent<OverlayProps> = ({ children, toggleOverlay }) => {
+    // Close on escape
+    useEffect(() => {
+        const escapeEvent = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                toggleOverlay();
+            }
+        };
+
+        window.addEventListener('keydown', escapeEvent);
+
+        return () => {
+            window.removeEventListener('keydown', escapeEvent);
+        };
+    });
+
     return (
         <div className={styles}>
             {children}
             <button type="button" className={closeButtonStyle} onClick={toggleOverlay}>
-                ❌
+                <Icon icon={iconXMark} />
             </button>
         </div>
     );
