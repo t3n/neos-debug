@@ -1,20 +1,19 @@
-import { h } from 'preact';
+import { useComputed } from '@preact/signals';
 
 import { useDebugContext } from '../../context/DebugContext';
 import QueryTable from './QueryTable';
-import Overlay from '../../presentationals/Overlay';
+import Overlay, { overlayState } from '../../presentationals/Overlay';
 
 const QueryOverlay = () => {
+    const visible = useComputed(() => overlayState.value === 'query');
     const {
         debugInfos: { sqlData },
-        showQueryOverlay,
-        toggleQueryOverlay,
     } = useDebugContext();
 
-    if (!showQueryOverlay) return null;
+    if (!visible.value) return null;
 
     return (
-        <Overlay toggleOverlay={toggleQueryOverlay}>
+        <Overlay>
             <h1>Database query information</h1>
             <p>
                 <strong>{sqlData.queryCount}</strong> queries with <strong>{sqlData.executionTime.toFixed(2)}ms</strong>{' '}

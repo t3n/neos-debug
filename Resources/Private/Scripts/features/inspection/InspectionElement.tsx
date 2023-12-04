@@ -2,7 +2,7 @@ import { FunctionComponent, h } from 'preact';
 import { StateUpdater, useCallback, useEffect, useState } from 'preact/hooks';
 
 import { css } from '../../styles/css';
-import Icon from '../../presentationals/Icon';
+import { Icon } from '../../presentationals/Icon';
 import magnifyingGlassIcon from '../../presentationals/icons/magnifying-glass-chart-solid.svg';
 
 type InspectionElementProps = {

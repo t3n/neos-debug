@@ -1,10 +1,11 @@
-import { FunctionComponent, Fragment, h } from 'preact';
+import { FunctionComponent, Fragment } from 'preact';
 import { useState, useEffect, useCallback } from 'preact/hooks';
+import { useComputed } from '@preact/signals';
 
 import { useDebugContext } from '../../context/DebugContext';
 import InspectionElement from './InspectionElement';
 import { css } from '../../styles/css';
-import Overlay from '../../presentationals/Overlay';
+import Overlay, { overlayState } from '../../presentationals/Overlay';
 
 let observer = null;
 
@@ -14,10 +15,10 @@ const tableStyles = css`
     background-color: var(--colors-ContrastDarker);
     color: var(--colors-ContrastBrightest);
     pointer-events: all;
-    
+
     td {
         vertical-align: text-bottom;
-        
+
         &:first-child {
             font-weight: bold;
         }
@@ -34,7 +35,8 @@ const tableStyles = css`
 `;
 
 const InspectionOverlay: FunctionComponent = () => {
-    const { showInspectionOverlay, cacheInfos } = useDebugContext();
+    const visible = useComputed(() => overlayState.value === 'inspection');
+    const { cacheInfos } = useDebugContext();
     const [visibleElements, setVisibleElements] = useState<Record<string, boolean>>({});
     const [activeElement, setActiveElement] = useState<CacheInfo>(null);
 
@@ -54,7 +56,7 @@ const InspectionOverlay: FunctionComponent = () => {
             });
         }
 
-        if (showInspectionOverlay) {
+        if (visible) {
             cacheInfos.forEach((cacheInfo) => observer.observe(cacheInfo.parentNode));
         } else {
             cacheInfos.forEach((cacheInfo) => observer.unobserve(cacheInfo.parentNode));
@@ -65,9 +67,9 @@ const InspectionOverlay: FunctionComponent = () => {
                 cacheInfos.forEach((cacheInfo) => observer.unobserve(cacheInfo.parentNode));
             }
         };
-    }, [showInspectionOverlay]);
+    }, [visible.value]);
 
-    if (!showInspectionOverlay) return null;
+    if (!visible.value) return null;
 
     return (
         <Fragment>
@@ -81,7 +83,7 @@ const InspectionOverlay: FunctionComponent = () => {
                     />
                 ))}
             {activeElement && (
-                <Overlay toggleOverlay={() => setActiveElement(null)}>
+                <Overlay onClose={() => setActiveElement(null)}>
                     <table className={tableStyles}>
                         <tbody>
                             <tr>

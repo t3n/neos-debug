@@ -1,9 +1,9 @@
 import { ComponentChildren, FunctionComponent, h } from 'preact';
 
 import { css } from '../styles/css';
-import Icon from './Icon';
-import iconXMark from './icons/circle-xmark-regular.svg';
-import { useEffect } from 'preact/hooks';
+import { Icon, iconXMark } from './Icon';
+import { useCallback, useEffect } from 'preact/hooks';
+import { signal } from '@preact/signals';
 
 const styles = css`
     align-items: flex-start;
@@ -35,17 +35,24 @@ const closeButtonStyle = css`
     color: white;
 `;
 
+const overlayState = signal<Overlays | null>(null);
+
 type OverlayProps = {
     children: ComponentChildren;
-    toggleOverlay: () => void;
+    onClose?: () => void;
 };
 
-const Overlay: FunctionComponent<OverlayProps> = ({ children, toggleOverlay }) => {
+const Overlay: FunctionComponent<OverlayProps> = ({ children, onClose }) => {
+    const closeOverlay = useCallback(() => {
+        overlayState.value = null;
+        onClose && onClose();
+    }, []);
+
     // Close on escape
     useEffect(() => {
         const escapeEvent = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
-                toggleOverlay();
+                closeOverlay();
             }
         };
 
@@ -59,11 +66,12 @@ const Overlay: FunctionComponent<OverlayProps> = ({ children, toggleOverlay }) =
     return (
         <div className={styles}>
             {children}
-            <button type="button" className={closeButtonStyle} onClick={toggleOverlay}>
+            <button type="button" className={closeButtonStyle} onClick={closeOverlay}>
                 <Icon icon={iconXMark} />
             </button>
         </div>
     );
 };
 
+export { overlayState, Overlay };
 export default Overlay;

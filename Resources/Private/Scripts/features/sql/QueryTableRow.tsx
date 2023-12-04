@@ -1,8 +1,7 @@
-import { FunctionComponent, Fragment, h } from 'preact';
-
-import QueryDetails from '../../interfaces/QueryDetails';
-import { css } from '../../styles/css';
+import { FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
+
+import { css } from '../../styles/css';
 
 interface QueryTableRowProps {
     queryString: string;

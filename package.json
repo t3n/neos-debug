@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@emotion/css": "^11.11.2",
+    "@preact/signals": "^1.2",
     "preact": "^10.19.2",
     "preact-custom-element": "^4.3.0"
   },

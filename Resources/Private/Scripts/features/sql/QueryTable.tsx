@@ -1,4 +1,4 @@
-import { h, FunctionComponent, Fragment } from 'preact';
+import { FunctionComponent } from 'preact';
 
 import { useDebugContext } from '../../context/DebugContext';
 import { css } from '../../styles/css';

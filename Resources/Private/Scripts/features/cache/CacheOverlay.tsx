@@ -1,9 +1,8 @@
-import { h } from 'preact';
-
 import { useDebugContext } from '../../context/DebugContext';
 import { css } from '../../styles/css';
-import Overlay from '../../presentationals/Overlay';
+import Overlay, { overlayState } from '../../presentationals/Overlay';
 import CacheTableEntry from './CacheTableEntry';
+import { useComputed } from '@preact/signals';
 
 const headerStyle = css`
     display: flex;
@@ -28,12 +27,13 @@ const tableStyle = css`
 `;
 
 const CacheOverlay = () => {
-    const { debugInfos, cacheInfos, showCacheOverlay, toggleCacheOverlay } = useDebugContext();
+    const visible = useComputed(() => overlayState.value === 'cache');
+    const { debugInfos, cacheInfos } = useDebugContext();
 
-    if (!showCacheOverlay) return null;
+    if (!visible.value) return null;
 
     return (
-        <Overlay toggleOverlay={toggleCacheOverlay}>
+        <Overlay>
             <h1>Fusion cache information</h1>
             <div className={headerStyle}>
                 <span>

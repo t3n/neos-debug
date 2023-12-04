@@ -595,6 +595,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@preact/signals-core@npm:^1.4.0":
+  version: 1.5.0
+  resolution: "@preact/signals-core@npm:1.5.0"
+  checksum: 048acda061324cf7662c2717f1db1c524040942965e25c4d0686c623248c44a1e69ec6a9ead6d66f2268f6fdcd6d09ef3e5ad6a72255e0403be0a7d319269673
+  languageName: node
+  linkType: hard
+
+"@preact/signals@npm:^1.2":
+  version: 1.2.2
+  resolution: "@preact/signals@npm:1.2.2"
+  dependencies:
+    "@preact/signals-core": "npm:^1.4.0"
+  peerDependencies:
+    preact: 10.x
+  checksum: 2c9890836c6e96d3f87a0985f17247bad8af253b6c82338dd4419ea7ade32f7e3613cec046dd0ade6785744e0aa8b8a3e5d0ae788179de2285c04d893265a110
+  languageName: node
+  linkType: hard
+
 "@types/json-schema@npm:^7.0.12":
   version: 7.0.15
   resolution: "@types/json-schema@npm:7.0.15"
@@ -3095,6 +3113,7 @@ __metadata:
   resolution: "t3n-neos-debug@workspace:."
   dependencies:
     "@emotion/css": "npm:^11.11.2"
+    "@preact/signals": "npm:^1.2"
     "@types/preact-custom-element": "npm:^4.0.4"
     "@typescript-eslint/eslint-plugin": "npm:^6.13.1"
     "@typescript-eslint/parser": "npm:^6.13.1"

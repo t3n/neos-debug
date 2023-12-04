@@ -55,8 +55,11 @@ type DebugInfos = {
             };
         };
     };
+    resourceStreamRequests: Record<string, string>;
     cCacheHits: number;
     // TODO: Create type for cache misses
     cCacheMisses: string[];
     cCacheUncached: number;
 };
+
+type Overlays = 'cache' | 'query' | 'inspection' | 'warnings';
