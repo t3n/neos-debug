@@ -19,6 +19,7 @@ use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Utils;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Aop\JoinPointInterface;
+use Neos\Flow\ResourceManagement\PersistentResource;
 use t3n\Neos\Debug\Logging\DebugStack;
 use t3n\Neos\Debug\Service\DebugService;
 
@@ -56,6 +57,8 @@ class CollectDebugInformationAspect
      * @var string[]
      */
     protected $contentCacheMisses = [];
+
+    protected $resourceStreamRequests = [];
 
     /**
      * @Flow\InjectConfiguration(package="t3n.Neos.Debug", path="serverTimingHeader.enabled")
@@ -137,6 +140,7 @@ class CollectDebugInformationAspect
             'cCacheHits' => $this->contentCacheHits,
             'cCacheMisses' => $this->contentCacheMisses,
             'cCacheUncached' => 0, // Init as 0 as the actual number has to be resolved from the individual cache entries
+            'resourceStreamRequests' => $this->resourceStreamRequests,
         ];
 
         $debugOutput = '<!--__NEOS_DEBUG__ ' . json_encode($data) . '-->';
@@ -161,6 +165,24 @@ class CollectDebugInformationAspect
     {
         $this->sqlLoggingStack = new DebugStack();
         $this->entityManager->getConfiguration()->setSQLLogger($this->sqlLoggingStack);
+    }
+
+    /**
+     * Create an entry for each resource stream request.
+     * Those can slow down rendering significantly, so we want to know about them.
+     *
+     * @Flow\Before("method(Neos\Flow\ResourceManagement\ResourceManager->getStreamByResource()) && t3n\Neos\Debug\Aspect\CollectDebugInformationAspect->debuggingActive")
+     */
+    public function addResourceStreamRequest(\Neos\Flow\AOP\JoinPointInterface $joinPoint): void
+    {
+        /** @var PersistentResource $resource */
+        $resource = $joinPoint->getMethodArgument('resource');
+        if ($resource) {
+            $this->resourceStreamRequests[]= [
+                'sha1' => $resource->getSha1(),
+                'filename' => $resource->getFilename(),
+            ];
+        }
     }
 
     /**
