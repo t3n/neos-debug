@@ -55,11 +55,17 @@ type DebugInfos = {
             };
         };
     };
-    resourceStreamRequests: Record<string, string>;
+    resourceStreamRequests: NeosResource[];
     cCacheHits: number;
     // TODO: Create type for cache misses
     cCacheMisses: string[];
     cCacheUncached: number;
+};
+
+type NeosResource = {
+    sha1: string;
+    filename: string;
+    collectionName: string;
 };
 
 type Overlays = 'cache' | 'query' | 'inspection' | 'warnings';

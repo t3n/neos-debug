@@ -181,6 +181,7 @@ class CollectDebugInformationAspect
             $this->resourceStreamRequests[]= [
                 'sha1' => $resource->getSha1(),
                 'filename' => $resource->getFilename(),
+                'collectionName' => $resource->getCollectionName(),
             ];
         }
     }
