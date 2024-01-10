@@ -12,6 +12,7 @@ const headerStyle = css`
 const tableStyle = css`
     border-collapse: collapse;
     margin-top: 1rem;
+    width: 100%;
 
     th {
         text-align: left;

@@ -20,6 +20,8 @@ const styles = css`
     position: fixed;
     right: 1rem;
     top: 1rem;
+    max-width: 1280px;
+    margin: 0 auto;
     z-index: 10002;
 
     h1 {
