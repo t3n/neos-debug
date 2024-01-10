@@ -33,17 +33,29 @@ const styles = css`
     --colors-UncheckedCheckboxTick: #5b5b5b;
     --button-bg: var(--colors-ContrastNeutral);
 
+    font:
+        112.5%/1.65 Noto Sans Regular,
+        Helvetica Neue Light,
+        Helvetica,
+        Arial,
+        sans-serif,
+        serif;
+
     button {
         border: none;
         background-color: var(--button-bg);
         color: var(--colors-ContrastBrightest);
         cursor: pointer;
         white-space: break-spaces;
-        padding: 0.3rem 0.5rem;
+        padding: 0.5rem;
 
         &:hover {
             background-color: var(--colors-ContrastDark);
             color: var(--colors-PrimaryBlue);
+        }
+
+        span {
+            display: flex;
         }
     }
 
