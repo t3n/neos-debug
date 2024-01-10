@@ -43,9 +43,6 @@ const QueryTableRow: FunctionComponent<QueryTableRowProps> = ({ queryString, que
                 <span className={[sqlStringStyle, collapsed && collapsedStyle].join(' ')} title={queryString}>
                     {queryString}
                 </span>
-                <button className={toggleStyle} onClick={() => setCollapsed((prev) => !prev)}>
-                    {collapsed ? '◀' : '▼'}
-                </button>
                 {!collapsed && (
                     <>
                         <strong style={{ margin: '1rem 0 .5rem', display: 'block' }}>Calls by parameters:</strong>
@@ -61,6 +58,11 @@ const QueryTableRow: FunctionComponent<QueryTableRowProps> = ({ queryString, que
             </td>
             <td>{queryDetails.executionTimeSum.toFixed(2)} ms</td>
             <td>{queryDetails.count}</td>
+            <td>
+                <button className={toggleStyle} onClick={() => setCollapsed((prev) => !prev)} title="Toggle details">
+                    {collapsed ? '◀' : '▼'}
+                </button>
+            </td>
         </tr>
     );
 };

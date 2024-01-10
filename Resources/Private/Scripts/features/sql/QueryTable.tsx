@@ -52,13 +52,14 @@ const QueryTable: FunctionComponent = () => {
                     <th style={{ textAlign: 'left' }}>Query</th>
                     <th style={{ width: '100px', textAlign: 'right' }}>Total time</th>
                     <th style={{ width: '100px', textAlign: 'right' }}>Count</th>
+                    <th style={{ width: '100px', textAlign: 'right' }} />
                 </tr>
             </thead>
             <tbody>
                 {Object.keys(groupedQueries).map((tableName) => (
                     <>
                         <tr className={tableNameStyle}>
-                            <td colSpan={3}>
+                            <td colSpan={4}>
                                 <strong>{tableName}</strong>
                             </td>
                         </tr>
