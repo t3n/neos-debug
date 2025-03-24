@@ -7,7 +7,7 @@ At this point in time you're able to debug your content cache configuration as w
 Additionally, the Server-Timing http header can be enabled that will add request timings to responses. 
 Those then can be viewed in the browser network tab.
 
-_Note: This is still a very early rough version. Contributions are welcome in any Error. Nevertheless, it's already adding value to your debug experience_
+Note: ⚠️ This plugin is now superseded by the plugin https://github.com/Flowpack/neos-debug
 
 ![Neos CMS Demo Site with enabled debug console](t3n-neos-debug.jpg 'Neos CMS Demo Site with enabled debug console')
 ![Server-Timing header in the browser network tab](server-timing-example.jpg 'Viewing the timings in the browser network tab')
