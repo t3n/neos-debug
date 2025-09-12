@@ -1,4 +1,5 @@
-[![CircleCI](https://circleci.com/gh/t3n/neos-debug.svg?style=svg)](https://circleci.com/gh/t3n/neos-debug) [![Latest Stable Version](https://poser.pugx.org/t3n/neos-debug/v/stable)](https://packagist.org/packages/t3n/neos-debug) [![License](https://poser.pugx.org/t3n/neos-debug/license)](https://packagist.org/packages/t3n/neos-debug)
+> [!WARNING]
+> **This plugin is no longer being maintained and is superseded by the plugin** https://github.com/Flowpack/neos-debug
 
 # t3n.Neos.Debug
 
@@ -6,8 +7,6 @@ The t3n.Neos.Debug package is a small helper package to add a debug panel to you
 At this point in time you're able to debug your content cache configuration as well as sql queries.
 Additionally, the Server-Timing http header can be enabled that will add request timings to responses. 
 Those then can be viewed in the browser network tab.
-
-_Note: This is still a very early rough version. Contributions are welcome in any Error. Nevertheless, it's already adding value to your debug experience_
 
 ![Neos CMS Demo Site with enabled debug console](t3n-neos-debug.jpg 'Neos CMS Demo Site with enabled debug console')
 ![Server-Timing header in the browser network tab](server-timing-example.jpg 'Viewing the timings in the browser network tab')
@@ -100,3 +99,6 @@ __enable_neos_debug__(true)
 ```
 
 This will set a cookie and the debug mode will still be active after a page refresh.
+
+> [!WARNING]
+> **This plugin is no longer being maintained and is superseded by the plugin** https://github.com/Flowpack/neos-debug

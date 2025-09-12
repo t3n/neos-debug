@@ -3,6 +3,7 @@
     "description": "Helper package to visualize debug inforamations for neos including fusion content cache",
     "license": "MIT",
     "type": "neos-package",
+    "abandoned": "Flowpack/neos-debug",
     "require": {
         "neos/neos": "^7.0 || ^8.0"
     },
